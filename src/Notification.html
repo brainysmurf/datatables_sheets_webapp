@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<?!= include('CSS'); ?>
+<?- include('css'); ?>
 
 <div class="title">Notify your teacher(s) every time you finish a new entry!</div>
 
-<div id="emailContainer" data-contacts="" class="ui-widget">
+<div id="emailContainer" data-contacts='["example@example.com"]' class="ui-widget">
   <label for="emails">Emails: </label>
   <input id="emails">
 </div>
 
-<?!= include('JavaScript'); ?>
+<?- include('javascript'); ?>

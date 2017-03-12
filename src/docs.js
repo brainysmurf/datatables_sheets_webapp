@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 function insertHROnTop() {
   var doc = DocumentApp.getActiveDocument();
   var body = doc.getBody();
@@ -18,3 +21,5 @@ function insertTextOnTop(textToInsert, heading, select) {
     doc.setSelection(rangeBuilder.build());
   }
 }
+
+})();

@@ -1,3 +1,6 @@
+(function () {
+'use strict';
+
 let moment = require('moment');
 let gas = require('gas-local');
 let assert = require('chai').assert;
@@ -9,10 +12,10 @@ let MockedObjects = {
 
 	},
 	__proto__: gas.globalMockDefault,
-}
-MockedObjects.Moment.load = function () {}  // load is part of GAS ecosystem
+};
+MockedObjects.Moment.load = function () {};  // load is part of GAS ecosystem
 
-let app = gas.require('./src', MockedObjects);
+let virtual = gas.require('./src', MockedObjects);
 
 class UiMocker {
 	constructor() {
@@ -36,12 +39,14 @@ class UiMocker {
 describe("Integration tests", function () {
 
 	var ui = new UiMocker();
-	app.createMenus(ui);
+	virtual.app.createMenus(ui);
 
 	it("Menus have actual corresponding functions", function () {
 		ui.items.forEach(function(menuItem) {
-			assert.typeOf(app[menuItem], 'function');
+			assert.typeOf(virtual[menuItem], 'function');
 		});
 	});
 
 });
+
+})();
