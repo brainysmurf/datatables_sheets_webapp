@@ -8,23 +8,18 @@ let path = require('path');
 	let server = connect();
 
 	server.use(function(req, res, next) {
-		console.log(req.url);
-		var params = {delimiter: "?"};
-		ejs.renderFile('src/Notification.html', params, function(err, result) {
-			if (err) {
-				console.log("Does not exist");
-				console.log(err);
-				next();
-			} else {
-				console.log(result);
-				res.end(result);
-			}
-		});
+		var params = {},
+			options = {delimiter: "?", filename: 'src/Notification.html'},
+			data = fs.readFileSync('src/Notification.html', 'utf-8'),
+			result = data.replace(/<\?!=/g, '<?-'),
+			html = ejs.render(result, params, options);
+
+		console.log(html);
+		res.end(html);
+	});
 
 		// load up virtual global space, too right?
 		// var html = ejs.render(contents, {});
-
-	});
 
 	http.createServer(server).listen(8888);
 })()
