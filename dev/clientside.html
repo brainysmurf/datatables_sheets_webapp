@@ -1,5 +1,5 @@
 
-<div id="wrapper">
+<div style="display:none;" id="wrapper">
     <div id="row">
         <div id="document">
             <div>hi</div>
@@ -17,7 +17,7 @@
 $(function () {
     // document ready, create the document on the right-hand side
     // sure beats relying on a production variable...
-    console.log($('#document'));
+    console.log($('#documentContent'));
 });
 
 (function (window) {
@@ -43,10 +43,26 @@ $(function () {
 
         clientSideMocks: {
             start: function () { 
-                console.log('start');
+                $new = $('<div>', {
+                    html: $('<input/>', {
+                        class: "documentText",
+                        placeholder: "Start writing!"
+                    }),
+                });
+                $new.append('<hr>');
+                $('#documentContent').prepend($new);
             },
             finish: function () {
-                console.log('finish');
+                $docText = $('.documentText:first');
+                var wroteWhat = $docText.value;
+                if (wroteWhat !== "") {
+                    $docText.before($('<h1>', {
+                        text:"Test"
+                    }));
+                }
+                var howMany = app.countWords(wroteWhat);
+                console.log(wroteWhat);
+                console.log(howMany);
             },
             notify: function () {
                 console.log("notify");
@@ -60,7 +76,6 @@ $(function () {
             Limitations, because we are returning a promise, we cannot call it
         */
         get: function(target, name) {
-
             // If already defined, i.e. with.. method, use that...
             if (name in target) {
                 return target[name];
