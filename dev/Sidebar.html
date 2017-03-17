@@ -14,14 +14,22 @@
 
   <?!= include('css'); ?>
 
+  <?!= include('clientside'); ?>
+
 </head>
 
 <body>
 
   <? if (!production) { ?>
-  <div class="sidebar">
-  <div class="sidebarTitlebar">Name</div>
-  <div id="bodyContent">
+  <div id="wrapper">
+    <div id="row">
+      <div id="document">
+        <div>hi</div>
+      </div>
+
+      <div id="sidebar">
+      <div class="sidebarTitlebar">Gamified Journal</div>
+        <div id="bodyContent">
   <? } ?>
 
   <div id="tabs">
@@ -36,7 +44,7 @@
       <div id="startButton" class="stopwatchButton startButton">Start</div>
       <div id="finishedButton" class="stopwatchButton">Finished!</div>
       </div>
-      <div id="timer" data-timer="1000"></div>
+      <div id="timer" data-timer="900"></div>
       <div class="startStopButtons">
       <div id="resetButton" class="stopwatchButton">Reset</div>
       </div>
@@ -55,6 +63,8 @@
   </div>
 
   <? if (!production) { ?>
+  </div>
+  </div>
   </div>
   </div>
   <? } ?>

@@ -1,4 +1,3 @@
-(function () {
 'use strict';
 
 /*
@@ -10,10 +9,8 @@
   Note: ejs uses .ejs suffix for filenames but google stack requires
   .html/.css; this can be resolved by using symlinks 
 */
-function include(filename) {
+function include(filename, ignore) {
 	return HtmlService.createHtmlOutputFromFile(filename)
 	    .setSandboxMode(HtmlService.SandboxMode.IFRAME)
 	    .getContent();
 }
-
-})();
