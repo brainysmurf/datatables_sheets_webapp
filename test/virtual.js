@@ -3,7 +3,6 @@ let gas = require('gas-local');
 let ejs = require('ejs');
 const sourcePath = 'dev';
 
-
 var googleRunScript = {
 	successHandlers: [],
 	failureHandlers: [],
@@ -88,7 +87,7 @@ MockedObjects.Moment.load = function () {};  // load is part of GAS ecosystem
 var virtual = gas.require('./' + sourcePath, MockedObjects);
 
 // Passed into include in order to ensure templates have virtual source too
-virtual.virtual = function () { return console.log('HHHHHHHEEEEEYYYYYYYY', MockedObjects); gas.require('./' + sourcePath, MockedObjects) };
+virtual.virtual = function () { gas.require('./' + sourcePath, MockedObjects) };
 
 
 module.exports = virtual;

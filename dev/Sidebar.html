@@ -14,7 +14,7 @@
 
   <?!= include('css'); ?>
 
-  <?!= include('clientside'), virtual(); ?>
+  <?/*include('development');*/?>
 
 </head>
 
@@ -41,12 +41,12 @@
     <div id="timerTab">
       <center>
       <div class="startStopButtons">
-      <div id="startButton" class="stopwatchButton startButton">Start</div>
-      <div id="finishedButton" class="stopwatchButton">Finished!</div>
+      <div id="buttonStart" class="stopwatchButton startButton">Start</div>
+      <div id="buttonFinished" class="stopwatchButton">Finished!</div>
       </div>
       <div id="timer" data-timer="900"></div>
       <div class="startStopButtons">
-      <div id="resetButton" class="stopwatchButton">Reset</div>
+      <div id="buttonReset" class="stopwatchButton">Reset</div>
       </div>
       </center>
     </div>

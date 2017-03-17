@@ -1,6 +1,12 @@
 <script>
 
 $(function () {
+
+	var setbtnDisabled = function($btn, bool) {
+		$btn.button('option', 'disabled', bool);
+		return $btn;
+	};
+
 	$("#timer").TimeCircles({
 		start: false,
 		time: {
@@ -10,11 +16,16 @@ $(function () {
 		}
 	});
 
-	$('#startButton').button();
-	$('#finishedButton').button({
+	var $startButton = $('#buttonStart'),
+		$finishedButton = $('#buttonFinished'),
+		$resetButton = $('#buttonReset'),
+		$timer = $('#timer');
+
+	$startButton.button();
+	$finishedButton.button({
 		disabled: true,
 	});
-	$('#resetButton').button({
+	$resetButton.button({
 		disabled: true,
 	});
 
@@ -24,12 +35,11 @@ $(function () {
 	  source: $('#emailContainer').data('contacts')
 	});
 
-	$('#startButton').click(function () {
+	$startButton.click(function () {
 		if ($(this).text() == 'Start') {
 			google.script.run
 					.withSuccessHandler(function () {
 						$("#timer").TimeCircles().start();
-						$('#resetButton').button('option', 'disabled', false);
 						$(this).text('Pause');
 						$(this).removeClass('pausedButton');
 						$(this).removeClass('startButton');
@@ -39,39 +49,45 @@ $(function () {
 					})
 				.start();
 		} else if ($(this).text() == 'Resume') {
-			$("#timer").TimeCircles().start();
+			$timer.TimeCircles().start();
 			$(this).text('Pause');
 			$(this).removeClass('pausedButton');
 			$(this).removeClass('startButton');
+			setbtnDisabled($resetButton, true);
 		} else {
-			$("#timer").TimeCircles().stop();
+			$timer.TimeCircles().stop();
 			$(this).text('Resume');
 			$(this).addClass('pausedButton')
 		}
-		$('#finishedButton').button('option', 'disabled', false);
+
+		// every time?
+		setbtnDisabled($finishedButton, false);
 	});
 
-	$('#finishedButton').click(function () {
-		var duration = parseInt($("#timer").data('timer')) - $("#timer").TimeCircles().getTime();
+	$finishedButton.click(function (e) {
+		if (this.disabled) { e.preventDefault(); return; }
+		var duration = parseInt($timer.data('timer')) - $timer.TimeCircles().getTime();
 		google.script.run
 				.withSuccessHandler(function () {
-					$('#resetButton').click();		
+					setbtnDisabled($finishedButton, true);
+					setbtnDisabled($resetButton, false)
+						.click();
 				})
 				.withFailureHandler(function (error) {
-					console.log(error);
-					$('#resetButton').click();
+					setbtnDisabled($resetButton, false).click();
 				})
 			.finish(duration);
 	});
 
-	$('#resetButton').click(function () {
-		$("#timer").TimeCircles().restart();
-		$("#timer").TimeCircles().stop();
-		$('#startButton').text('Start');
-		$(this).button('option', 'disabled', true);
-		$('#finishedButton').button('option', 'disabled', true);
-		$('#startButton').removeClass('pausedButton');
-		$('#startButton').addClass('startButton');
+	$resetButton.click(function (e) {
+		if (this.disabled) { e.preventDefault(); return; }
+		$timer.TimeCircles().restart();
+		$timer.TimeCircles().stop();
+		$startButton.text('Start');
+		setbtnDisabled($(this), true);
+		setbtnDisabled($finishedButton, true);
+		$startButton.removeClass('pausedButton');
+		$startButton.addClass('startButton');
 	})
 
 });

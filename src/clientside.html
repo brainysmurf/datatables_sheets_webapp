@@ -1,3 +1,36 @@
+<style>
+#wrapper {
+    display: table;
+    width: 600px;
+}
+
+#row {
+    display: table-row;
+}
+
+#documentContent {
+    display: table-cell;
+    width: 300px;
+    border: 1px solid #eee;
+    border-right: none;
+    padding: 5px;
+}
+
+#sidebar {
+    width: 300px;
+    border: 1px solid #eee;
+    display: table-cell;
+}
+
+.documentText {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#bodyContent {
+    margin: 8px;
+}
+</style>
 
 <div style="display:none;" id="wrapper">
     <div id="row">
@@ -17,7 +50,6 @@
 $(function () {
     // document ready, create the document on the right-hand side
     // sure beats relying on a production variable...
-    console.log($('#documentContent'));
 });
 
 (function (window) {
@@ -46,23 +78,18 @@ $(function () {
                 $new = $('<div>', {
                     html: $('<input/>', {
                         class: "documentText",
-                        placeholder: "Start writing!"
+                        placeholder: "Start writing!",
                     }),
                 });
                 $new.append('<hr>');
                 $('#documentContent').prepend($new);
             },
-            finish: function () {
+            finish: function (duration) {
+                // duration is nothing in the clientside; unused
                 $docText = $('.documentText:first');
-                var wroteWhat = $docText.value;
-                if (wroteWhat !== "") {
-                    $docText.before($('<h1>', {
-                        text:"Test"
-                    }));
-                }
-                var howMany = app.countWords(wroteWhat);
-                console.log(wroteWhat);
-                console.log(howMany);
+                $docText.before($('<h1>', {
+                    text:"Placeholder",
+                }));
             },
             notify: function () {
                 console.log("notify");

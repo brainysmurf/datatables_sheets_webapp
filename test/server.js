@@ -19,9 +19,19 @@ const sourcePath = 'dev';
 				params = virtual;
 				options = {delimiter: "?", filename: filePath},
 				data = fs.readFileSync(filePath, 'utf-8'),
-				result = data.replace(/<\?!=/g, '<?-'),  // Convert google template to ejs
+
+				// Convert google template for not escaping
+				// into compatible form for ejs
+				result = data.replace(/<\?!=/g, '<?-'),
+				// 
+
+				//
+				result = result.replace(/<\?\/\*include\((.*)\);\*\/\?\>/g, '<?- include($1); ?>'),
+				//
+
 				html = ejs.render(result, params, options);
 
+			// Got the html, now send on the modified response to the browser
 			console.log(html);
 			res.end(html);
 		}
