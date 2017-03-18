@@ -29,9 +29,9 @@ hr {
 }
 
 #sidebar {
+    display: table-cell;
     width: 300px;
     border: 1px solid #eee;
-    display: table-cell;
 }
 
 .documentText {
@@ -44,24 +44,39 @@ hr {
 }
 </style>
 
-<div style="display:none;" id="wrapper">
-    <div id="row">
-        <div id="document">
-            <div>hi</div>
-        </div>
-
-        <div id="sidebar">
-            <div class="sidebarTitlebar">Gamified Journal</div>
-            <div id="bodyContent"></div>
+<div id="developmentHtml" style="display:none">
+    <!-- 1: Wrap -->
+    <div id="wrapper">
+        <div id="row">
         </div>
     </div>
+
+    <!-- Append -->
+    <div id="documentContent"></div>
+    
+    <!-- Append -->
+    <div id="sidebar">
+        <div id="bodyContent"></div>
+    </div>
+
+    <!-- Append -->
+    <div id="sidebarTitlebarID" class="sidebarTitlebar">Gamified Journal</div>
+
 </div>
 
 <script>
 
 $(function () {
-    // document ready, create the document on the right-hand side
-    // sure beats relying on a production variable...
+    // document ready, manipulate the DOM that mimicks the document area
+    // better than having a production variable
+    // but does add some complexity
+    $('#tabs').wrap('#wrapper');
+    $('#developmentHtml > #wrapper').remove();
+    $('#tabs').wrap('#sidebar');
+    $('#developmentHtml > #sidebar').remove();
+    $('#row').prepend($('#documentContent'));
+    $('#sidebar').prepend($('#sidebarTitlebarID'));
+    $('#developmentHtml').remove();
 });
 
 (function (window) {

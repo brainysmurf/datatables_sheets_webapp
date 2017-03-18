@@ -20,18 +20,6 @@
 
 <body>
 
-  <? if (!production) { ?>
-  <div id="wrapper">
-    <div id="row">
-      <div id="documentContent">
-        
-      </div>
-
-      <div id="sidebar">
-      <div class="sidebarTitlebar">Gamified Journal</div>
-        <div id="bodyContent">
-  <? } ?>
-
   <div id="tabs">
     <ul>
       <li><a href="#timerTab">Timer</a></li>
@@ -61,13 +49,6 @@
     </div>
 
   </div>
-
-  <? if (!production) { ?>
-  </div>
-  </div>
-  </div>
-  </div>
-  <? } ?>
 
   <?!= include('javascript', virtual()); ?>
 </body>
