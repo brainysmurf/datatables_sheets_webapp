@@ -8,9 +8,12 @@ var app = {};
   // Define the paragraph styles that will be used
   app.TIMEKEY = 'timeStart';
 
+  app.getActiveDocument = function () {
+    return DocumentApp.getActiveDocument();
+  },
+
   app.getActiveDocumentBody = function () {
-    var doc = DocumentApp.getActiveDocument();
-    return doc.getBody();
+    return app.getActiveDocument().getBody();
   };
 
   app.showAlert = function (title, prompt, buttons) {
@@ -63,16 +66,19 @@ var app = {};
   };
 
   app.insertHROnTop = function() {
-    var doc = DocumentApp.getActiveDocument();
-    var body = doc.getBody();
+    var body = app.getActiveDocumentBody();
     body.insertParagraph(0, '\n');
     body.insertHorizontalRule(0);
     body.insertParagraph(0, '\n');
+    return body;
   };
 
   app.insertTextOnTop = function(textToInsert, heading, select) {
     var doc = DocumentApp.getActiveDocument();
-    var body = doc.getBody();
+
+    select = typeof select == 'undefined' ? false : select;
+
+    var body = app.getActiveDocumentBody();
     var par = body.insertParagraph(0, textToInsert);
     par.setHeading(heading);
     
@@ -81,18 +87,7 @@ var app = {};
       rangeBuilder.addElement(par);
       doc.setSelection(rangeBuilder.build());
     }
-  };
-
-  app.testCalcTimeElasped = function() {
-    var userProperties = PropertiesService.getUserProperties();  
-    var then = app.moment(userProperties.getProperty('timeStart'));
-    var now = app.moment(app.moment().format());
-    var result = calcTimeElapsed(then, now);
-  };
-
-  app.calcTimeElapsed = function(now, then) {
-    var duration = app.moment.duration(then.diff(now));
-    return Math.round(duration.asMinutes());
+    return body;
   };
 
   app.words = function() {
@@ -101,6 +96,9 @@ var app = {};
     return app.wordsFromBody(body);
   };
 
+  /* 
+    Extracts the words the user entered most recently, by finding the horizontal rule
+  */
   app.wordsFromBody =function(body) {
     var finished = false;
     var userEntered = "";
@@ -109,7 +107,7 @@ var app = {};
       var child = body.getChild(i);    
 
       if (!finished) {
-        userEntered += " " + child.getText();      
+        userEntered += " " + child.getText();
       }
 
       if (child.getNumChildren() > 0) {
@@ -125,23 +123,27 @@ var app = {};
     return {count: app.countWords(userEntered), text: userEntered};
   };
 
+  /*
+    Counts how many words appear in string {s}
+    Actually it just converts things to spaces and then counts the whitespaces
+  */
   app.countWords = function(s) {
-      s = s.replace(/(^\s*)|(\s*$)/gi,"");//exclude  start and end white-space
-      s = s.replace(/[ ]{2,}/gi," ");//2 or more space to 1
-      s = s.replace(/\n /,"\n"); // exclude newline with a start spacing
+      s = s.replace(/(^\s*)|(\s*$)/gi,"");  // exclude  start and end white-space
+      s = s.replace(/[\W]/g, ' ');          // convert all remaining whitespaces to spaces
+      s = s.replace(/[ ]{2,}/gi," ");       // 2 or more space to 1
       return s.split(' ').length; 
   };
 
-  app.emailAgents= function(body) {
-      var user = Session.getActiveUser(),
-          doc = DocumentApp.getActiveDocument(),
-          newBody = doc.getUrl() + '\n\n' + body,
-          subject = '[' + doc.getName() + '] New Entry by ' + user.getEmail();
+  // app.emailAgents= function(body) {
+  //     var user = Session.getActiveUser(),
+  //         doc = DocumentApp.getActiveDocument(),
+  //         newBody = doc.getUrl() + '\n\n' + body,
+  //         subject = '[' + doc.getName() + '] New Entry by ' + user.getEmail();
       
-      var agent = PropertiesService.getScriptProperties().getProperty('notify_email');
-      if (agent) {
-        MailApp.sendEmail(agent, subject, body);
-      }
-      Logger.log(agent);
-  };
+  //     var agent = PropertiesService.getScriptProperties().getProperty('notify_email');
+  //     if (agent) {
+  //       MailApp.sendEmail(agent, subject, body);
+  //     }
+  //     Logger.log(agent);
+  // };
 })();

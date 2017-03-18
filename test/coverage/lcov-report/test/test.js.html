@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for test/test.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">test/</a> test.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">8.11% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>3/37</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">7.14% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/14</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">8.11% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>3/37</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">(function () {
+	'use strict';
+&nbsp;
+	let assert = require('chai').assert;
+	let virtual = require('./virtual.js');
+<span class="cstat-no" title="statement not covered" >	let sinon = require('sinon');</span>
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	describe("Core document functions", <span class="fstat-no" title="function not covered" >function () {</span></span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		it("insertHROnTop modifies body", <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >			var body = virtual.app.insertHROnTop();</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(body.body.length, 3);</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(body.getText(), "\n&lt;hr&gt;\n");</span>
+		});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		it("insertTextOnTop modifies body", <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >			var body = virtual.app.insertTextOnTop('sample');</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(body.body.length, 1);</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(body.getText(), 'sample')</span>
+		});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		it("countWords treats whitespace accurately", <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(virtual.app.countWords('one two three'), 3);</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(virtual.app.countWords('one two\nthree'), 3);</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(virtual.app.countWords('one1 two 33three'), 3);</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(virtual.app.countWords('   one1\ntwo 33three   '), 3);</span>
+		});
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		it("wordsFromBody detects horizontal rule", <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >			virtual.app.insertHROnTop();</span>
+<span class="cstat-no" title="statement not covered" >			var body = virtual.app.insertTextOnTop('Hey hey hey hey hey hey');</span>
+<span class="cstat-no" title="statement not covered" >			virtual.app.insertHROnTop();</span>
+<span class="cstat-no" title="statement not covered" >			var body = virtual.app.insertTextOnTop('four words here now');</span>
+<span class="cstat-no" title="statement not covered" >			var wordInfo = virtual.app.wordsFromBody(body)</span>
+<span class="cstat-no" title="statement not covered" >			assert.equal(wordInfo.count, 4);</span>
+		});
+	});
+&nbsp;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >	describe("Integration tests", <span class="fstat-no" title="function not covered" >function () {</span></span>
+&nbsp;
+		class UiMocker {
+			constructor<span class="fstat-no" title="function not covered" >() {</span>
+<span class="cstat-no" title="statement not covered" >				this.items = [];</span>
+			}
+			createMenu<span class="fstat-no" title="function not covered" >(menuTitle) {</span>
+<span class="cstat-no" title="statement not covered" >				return this; </span>
+			}
+			addItem<span class="fstat-no" title="function not covered" >(display, func) { </span>
+<span class="cstat-no" title="statement not covered" >				this.items.push(func);</span>
+<span class="cstat-no" title="statement not covered" >				return this;</span>
+			}
+			addSeparator<span class="fstat-no" title="function not covered" >() { </span>
+<span class="cstat-no" title="statement not covered" >				return this;</span>
+			}
+			addToUi<span class="fstat-no" title="function not covered" >() { </span>
+<span class="cstat-no" title="statement not covered" >				return null;</span>
+			}
+		}
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		var ui = new UiMocker();</span>
+<span class="cstat-no" title="statement not covered" >		virtual.app.createMenus(ui);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >		it("Menus have actual corresponding functions", <span class="fstat-no" title="function not covered" >function () {</span></span>
+<span class="cstat-no" title="statement not covered" >			ui.items.forEach(<span class="fstat-no" title="function not covered" >function(menuItem) {</span></span>
+<span class="cstat-no" title="statement not covered" >				assert.typeOf(virtual[menuItem], 'function');</span>
+			});
+		});
+&nbsp;
+	});
+})();</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Mar 18 2017 21:09:01 GMT+0800 (MYT)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>

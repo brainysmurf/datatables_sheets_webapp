@@ -1,6 +1,19 @@
+/*
+	Interfaces with gas-local in order to bring what is normally server-side code
+	into the local node.js stack, i.e. "virtualizing" it
+
+	Creates an object virtual that contains all code in source folders
+	Also has method .virtual which creates one as well, which is used to pass on
+	virtualized code into templating files
+*/
+
+'use strict';
+
 let moment = require('moment');
 let gas = require('gas-local');
 let ejs = require('ejs');
+let sinon = require('sinon');
+let Document = require('./Document.js');
 const sourcePath = 'dev';
 
 var googleRunScript = {
@@ -73,13 +86,35 @@ var getter = {
 	}
 };
 
+
 let MockedObjects = {
 	google: {
 		script: {
-			run: new Proxy(googleRunScript, getter)
+			run: new Proxy(googleRunScript, getter),
+			host: {
+				close: function() { window.close(); },
+				origin: '',
+				editor: {
+					focus: function () { /* TBI */; },
+				},
+				setHeight: function (height) { /* TBI */; },
+				setWidth: function (width) { /* TBI */; },
+			}
 		}
 	},
 	production: false,
+
+	DocumentApp: {
+		getActiveDocument: function () {
+			return new Document();
+		},
+
+		/* constants */
+		ElementType: {
+			HORIZONTAL_RULE: '<hr>',
+		}
+	},
+
 	Moment: moment,
 	__proto__: gas.globalMockDefault,
 };
@@ -87,7 +122,8 @@ MockedObjects.Moment.load = function () {};  // load is part of GAS ecosystem
 var virtual = gas.require('./' + sourcePath, MockedObjects);
 
 // Passed into include in order to ensure templates have virtual source too
-virtual.virtual = function () { gas.require('./' + sourcePath, MockedObjects) };
-
+virtual.virtual = function () { 
+	gas.require('./' + sourcePath, MockedObjects);
+};
 
 module.exports = virtual;

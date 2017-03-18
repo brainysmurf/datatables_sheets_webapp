@@ -1,13 +1,14 @@
 #!/bin/bash
 
 OLD=`pwd`
-SRCPATH="dev"
+DEVPATH="dev"
 TESTPATH="test"
 
-trap "rm $SRCPATH/*.ejs; exit" SIGHUP SIGINT SIGTERM
+trap "echo; echo Removing previously created files; rm $DEVPATH/*.ejs; exit" SIGHUP SIGINT SIGTERM
 
-cd $SRCPATH
+cd $DEVPATH
 
+echo "Adding .ejs files to $DEVPATH/"
 for file in $(ls *.html); do
 	ln -s "$file" "${file/%.html/.ejs}"
 done

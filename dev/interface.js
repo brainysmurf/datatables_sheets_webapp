@@ -5,6 +5,9 @@
 
 'use strict';
 
+/*
+    Creates an area for writing by making a hr and 
+*/
 function start() {
     var NORMAL = DocumentApp.ParagraphHeading.NORMAL;
     app.insertHROnTop();

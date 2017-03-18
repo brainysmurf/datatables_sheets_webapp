@@ -49,6 +49,7 @@ $(function () {
 						$(this).removeClass('pausedButton');
 						$(this).removeClass('startButton');
 						setbtnDisabled($finishedButton, false);
+						google.script.host.editor.focus();
 					}.bind(this))
 					.withFailureHandler(function (error) {
 						console.log(error);

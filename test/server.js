@@ -11,34 +11,38 @@ const sourcePath = 'dev';
 
 	server.use(function(req, res, next) {
 		if (req.url === '/') {
-			console.log("Blank path sent in, enter a view")
-			next()
+			console.log("Blank path sent in, enter a view");
+			next();
 		} else {
 			var basename = req.url + '.html',
 				filePath = path.join(sourcePath, basename),
 				params = virtual;
-				options = {delimiter: "?", filename: filePath},
-				data = fs.readFileSync(filePath, 'utf-8'),
+				options = {delimiter: "?", filename: filePath};
 
-				// Convert google template for not escaping
-				// into compatible form for ejs
-				result = data.replace(/<\?!=/g, '<?-'),
-				// 
+			// Read in file contents directly, so we can manipulate it
+			var data = fs.readFileSync(filePath, 'utf-8');
+			//
 
-				//
-				result = result.replace(/<\?\/\*include\((.*)\);\*\/\?\>/g, '<?- include($1); ?>'),
-				//
+			// Convert google template for not escaping
+			// into compatible form for ejs
+			var result = data.replace(/<\?!=/g, '<?-');
+			//
 
-				html = ejs.render(result, params, options);
+			// Take the commented-out include and convert it
+			// It's commented out so it doesn't run on production, but does on local
+			// TODO: Incorporate whitespace into the regexp
+			result = result.replace(/<\?\/\*include\((.*)\);\*\/\?\>/g, '<?- include($1); ?>');
+			//	
+
+			// Render the modified result
+			var html = ejs.render(result, params, options);
+			//
 
 			// Got the html, now send on the modified response to the browser
-			console.log(html);
 			res.end(html);
 		}
 	});
 
-		// load up virtual global space, too right?
-		// var html = ejs.render(contents, {});
-
+	// launch the server so we can use localhost and play around with it on our browser
 	http.createServer(server).listen(8888);
 })();
