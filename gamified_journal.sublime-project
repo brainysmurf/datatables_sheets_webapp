@@ -1,0 +1,14 @@
+{
+	"folders":
+	[
+		{
+			"path": "dev/",
+		},
+		{
+			"path": "test/",
+			"file_exclude_patterns": [
+				"server.*"
+			]
+		},
+	]
+}
