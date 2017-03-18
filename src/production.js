@@ -10,4 +10,6 @@ var production = true;
 // in order to pass it a virtualized copy of the code to make include statements
 // work properly on that side
 // On production, it just needs to be an empty call, avoiding NameError
-var virtual = function () { return {} }; 
+var virtual = function () { 
+	return {}; 
+};
