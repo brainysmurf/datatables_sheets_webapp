@@ -36,32 +36,35 @@ $(function () {
 	});
 
 	$startButton.click(function () {
+
+		// 
+		// Interact with the document: START button clicked
+		//
 		if ($(this).text() == 'Start') {
+
 			google.script.run
 					.withSuccessHandler(function () {
-						$("#timer").TimeCircles().start();
+						$timer.TimeCircles().start();
 						$(this).text('Pause');
 						$(this).removeClass('pausedButton');
 						$(this).removeClass('startButton');
+						setbtnDisabled($finishedButton, false);
 					}.bind(this))
 					.withFailureHandler(function (error) {
 						console.log(error);
 					})
-				.start();
+				.start();  // interact with document with Google API calls
+
 		} else if ($(this).text() == 'Resume') {
 			$timer.TimeCircles().start();
 			$(this).text('Pause');
 			$(this).removeClass('pausedButton');
 			$(this).removeClass('startButton');
-			setbtnDisabled($resetButton, true);
 		} else {
 			$timer.TimeCircles().stop();
 			$(this).text('Resume');
 			$(this).addClass('pausedButton')
 		}
-
-		// every time?
-		setbtnDisabled($finishedButton, false);
 	});
 
 	$finishedButton.click(function (e) {

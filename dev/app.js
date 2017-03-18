@@ -49,8 +49,7 @@ var app = {};
 
   app.onOpen = function(ui) {
     var html = HtmlService.createTemplateFromFile('Sidebar').evaluate()
-      .setTitle('My custom sidebar')
-      .setWidth(350);
+      .setTitle('Gamified Journal')
 
     ui.showSidebar(html);
 

@@ -1,3 +1,8 @@
+/*
+    Functions that interface between the client-side frontend and the google backend
+    On local run these are not directly called, but mimicked
+*/
+
 'use strict';
 
 function start() {
@@ -14,16 +19,15 @@ function finish(duration) {
     var HEADER1 = DocumentApp.ParagraphHeading.HEADING1,
         HEADER2 = DocumentApp.ParagraphHeading.HEADING2,
         wds = app.words(),
-        numMinutes = app.moment().startOf('day')
-                                .seconds(15457)
-                                .format('mm'),
-        title = "(You spent " + numMinutes + " minutes to write " + wds.count + " words!)";
+        mom = app.moment().startOf('day')
+                          .seconds(duration),
+        numMinutes = mom.format('mm'),
+        numSeconds = mom.format('ss'),
+                             
+        title = "(You spent " + numMinutes + " minutes and " + numSeconds + " seconds to write " + wds.count + " words!)";
 
     app.insertTextOnTop(title, HEADER2, false);
     app.insertTextOnTop(app.moment().format('MMMM Do YYYY'), HEADER1, false);
-        
-    // app.emailAgents(wds.text);
-
 }
 
 function notify() {

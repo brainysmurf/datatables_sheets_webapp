@@ -14,23 +14,11 @@
 
   <?!= include('css'); ?>
 
-  <?!= include('clientside'), virtual(); ?>
+  <?/*include('development');*/?>
 
 </head>
 
 <body>
-
-  <? if (!production) { ?>
-  <div id="wrapper">
-    <div id="row">
-      <div id="documentContent">
-        
-      </div>
-
-      <div id="sidebar">
-      <div class="sidebarTitlebar">Gamified Journal</div>
-        <div id="bodyContent">
-  <? } ?>
 
   <div id="tabs">
     <ul>
@@ -61,13 +49,6 @@
     </div>
 
   </div>
-
-  <? if (!production) { ?>
-  </div>
-  </div>
-  </div>
-  </div>
-  <? } ?>
 
   <?!= include('javascript', virtual()); ?>
 </body>
