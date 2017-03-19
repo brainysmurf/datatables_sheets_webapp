@@ -40,6 +40,6 @@ It also uses [gas-local](https://github.com/mzagorny/gas-local) that works by pu
 
 One of the key design decisions that makes this work is the templating package chosen: [ejs](http://ejs.co). That uses a php-style of templating that is very similar to the templating language that Apps Script uses. The minor differences were easy to code up a work-around.
 
-# Why did you make the decision to put code in `dev/` and copy over to `src/`?
+## Why did you make the decision to put code in `dev/` and copy over to `src/`?
 
 Reasons. (To be written.)
