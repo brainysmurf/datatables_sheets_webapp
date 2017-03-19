@@ -20,15 +20,25 @@ You now have a gamified journal running on a document. (Full add-on support has 
 ## Getting Started: Develop with the app
 
 * Run the app, as above
-* Run the app locally, via `test/server.js`
-* Make changes in the `dev/` folder
-* Changes get reflected in browser upon saving (<-- This is a real timesaver!)
+* Run the app locally, running `test/server.sh` (Browser must support [Proxy](http://caniuse.com/#search=proxy))
+* Any changes in the `dev/` folder automatically reflect in the browser upon saving
 * Publish to the cloud with `./upload`, which copies files to `src/` and then run `gapps upload` for you (which uses `src/` as the source to copy to the cloud)
-* Changes are now reflected in the cloud
+* Changes are now reflected in the cloud (reload and test)
 
-### Also featuring...
+### Screen shots
 
-* Code linting with jshint
+Tests with Mocha:
+`$ npm test`
+![alt text][mocha]
+
+Runs locally in the browser:
+`$ test/server.sh`
+![alt text][browser]
+
+
+[mocha]: http://brainysmurf.github.io/img/testsWithMocha.png "npm test"
+[browser]: http://brainysmurf.github.io/img/runsInBrowser.png "test/server.sh"
+
 
 # Details
 

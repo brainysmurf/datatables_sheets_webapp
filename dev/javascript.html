@@ -1,26 +1,30 @@
 <script>
 
 $(function () {
+	// Document DOM is ready:
 
+	// Convenience function to set disabled of buttons
 	var setbtnDisabled = function($btn, bool) {
 		$btn.button('option', 'disabled', bool);
 		return $btn;
 	};
 
+	// Make the timer, not showing days or hours
 	$("#timer").TimeCircles({
 		start: false,
 		time: {
 			Days: { show: false },
 			Hours: { show: false },
-			Seconds: { show: true },
 		}
 	});
 
+	// Convenience variables
 	var $startButton = $('#buttonStart'),
 		$finishedButton = $('#buttonFinished'),
 		$resetButton = $('#buttonReset'),
 		$timer = $('#timer');
 
+	// Make the buttons
 	$startButton.button();
 	$finishedButton.button({
 		disabled: true,
@@ -29,69 +33,99 @@ $(function () {
 		disabled: true,
 	});
 
+	// Make the tabs
 	$('#tabs').tabs();
 
+	// Autocomplete ability for notifications (not feature complete yet)
 	$( "#emails" ).autocomplete({
 	  source: $('#emailContainer').data('contacts')
 	});
 
+	// When the user clicks on the start button...
 	$startButton.click(function () {
 
 		// 
-		// Interact with the document: START button clicked
+		// Interact with the document
 		//
 		if ($(this).text() == 'Start') {
 
 			google.script.run
+
+
 					.withSuccessHandler(function () {
+						// After function start runs in interface, make the clock go
+						// and update the user interface appropriately
 						$timer.TimeCircles().start();
 						$(this).text('Pause');
 						$(this).removeClass('pausedButton');
 						$(this).removeClass('startButton');
 						setbtnDisabled($finishedButton, false);
+						// this way the user can start typing immediately
 						google.script.host.editor.focus();
-					}.bind(this))
+					}.bind(this))  // pass on the button to the success handler
+
+
 					.withFailureHandler(function (error) {
 						console.log(error);
 					})
+
+
 				.start();  // interact with document with Google API calls
 
+
 		} else if ($(this).text() == 'Resume') {
+			// Just resuming
 			$timer.TimeCircles().start();
 			$(this).text('Pause');
 			$(this).removeClass('pausedButton');
 			$(this).removeClass('startButton');
 		} else {
+			// Just pausing
 			$timer.TimeCircles().stop();
 			$(this).text('Resume');
 			$(this).addClass('pausedButton')
 		}
 	});
 
+	// When the user clicks on finished...
 	$finishedButton.click(function (e) {
+
 		if (this.disabled) { e.preventDefault(); return; }
+
+		// calculate how much time has passed with the Timer package
+		// TODO: Figure out how to be able to change initial start time
 		var duration = parseInt($timer.data('timer')) - $timer.TimeCircles().getTime();
+
+
 		google.script.run
+
 				.withSuccessHandler(function () {
+					// After 
 					setbtnDisabled($finishedButton, true);
 					setbtnDisabled($resetButton, false)
 						.click();
 				})
+
 				.withFailureHandler(function (error) {
 					setbtnDisabled($resetButton, false).click();
 				})
-			.finish(duration);
+
+			.finish(duration);  // interact with the document with Google API calls
+
 	});
 
+	// When the user clicks on the reset button
 	$resetButton.click(function (e) {
+		// Does nothing, because it is always disabled
+		// TODO: Enable implementation
 		if (this.disabled) { e.preventDefault(); return; }
-		$timer.TimeCircles().restart();
-		$timer.TimeCircles().stop();
-		$startButton.text('Start');
-		setbtnDisabled($(this), true);
-		setbtnDisabled($finishedButton, true);
-		$startButton.removeClass('pausedButton');
-		$startButton.addClass('startButton');
+		// $timer.TimeCircles().restart();
+		// $timer.TimeCircles().stop();
+		// $startButton.text('Start');
+		// setbtnDisabled($(this), true);
+		// setbtnDisabled($finishedButton, true);
+		// $startButton.removeClass('pausedButton');
+		// $startButton.addClass('startButton');
 	})
 
 });

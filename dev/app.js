@@ -1,8 +1,21 @@
 'use script';
 
-var app = {};
+/*
+  main program
+  Builds an app object on the global context; all properties are functions
+  Which means no actual code (other than assignments) is executed at initial loading
 
-(function() {
+  Usage:
+
+  function onOpen() {
+    app.onOpen();  // app will already be defined in the global context
+  }
+*/
+
+(function(globalContext) {
+
+  globalContext.app = {};
+
   app.moment = Moment.load();
 
   // Define the paragraph styles that will be used
@@ -128,22 +141,19 @@ var app = {};
     Actually it just converts things to spaces and then counts the whitespaces
   */
   app.countWords = function(s) {
-      s = s.replace(/(^\s*)|(\s*$)/gi,"");  // exclude  start and end white-space
-      s = s.replace(/[\W]/g, ' ');          // convert all remaining whitespaces to spaces
-      s = s.replace(/[ ]{2,}/gi," ");       // 2 or more space to 1
+      s = s.replace(/(^\s*)|(\s*$)/gi, "");  // exclude  start and end white-space
+      s = s.replace(/[\s]/g, ' ');           // convert all remaining whitespaces to spaces
+      s = s.replace(/[ ]{2,}/gi, " ");       // 2 or more spaces changed to 1
       return s.split(' ').length; 
   };
 
-  // app.emailAgents= function(body) {
-  //     var user = Session.getActiveUser(),
-  //         doc = DocumentApp.getActiveDocument(),
-  //         newBody = doc.getUrl() + '\n\n' + body,
-  //         subject = '[' + doc.getName() + '] New Entry by ' + user.getEmail();
-      
-  //     var agent = PropertiesService.getScriptProperties().getProperty('notify_email');
-  //     if (agent) {
-  //       MailApp.sendEmail(agent, subject, body);
-  //     }
-  //     Logger.log(agent);
-  // };
-})();
+})(this);
+
+/*
+  (function (globalContext) {
+    ...
+  })(this);
+  
+  Build upon the globalContext is a better way of doing it, but note that
+  we'll have all the virtualized stuff there in the local stack (naming conflict are possible)
+*/

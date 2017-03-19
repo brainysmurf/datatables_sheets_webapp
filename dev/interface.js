@@ -1,12 +1,14 @@
 /*
     Functions that interface between the client-side frontend and the google backend
-    On local run these are not directly called, but mimicked
+    On local run these are not directly called, but mimicked with placeholder behaviour
+    On production is called by google.run.script on the client-side browser
 */
 
 'use strict';
 
 /*
-    Creates an area for writing by making a hr and 
+    Called when user clicks on Start button
+    Updates the document to have a horizontal rule and command text
 */
 function start() {
     var NORMAL = DocumentApp.ParagraphHeading.NORMAL;
@@ -14,6 +16,11 @@ function start() {
     app.insertTextOnTop("Start writing!", NORMAL, true);
 }
 
+/* 
+    Called when user clicks on Finish.
+    Updates the document to contain a readout of the date and information 
+    about the entry.
+*/
 function finish(duration) {
     if (typeof duration == 'undefined') {
         // do what?
@@ -33,6 +40,9 @@ function finish(duration) {
     app.insertTextOnTop(app.moment().format('MMMM Do YYYY'), HEADER1, false);
 }
 
+/*
+    Just a placeholder at the moment
+*/
 function notify() {
     var agent = PropertiesService.getScriptProperties().getProperty('notify_email'),
         prompt = "";
@@ -54,4 +64,11 @@ function notify() {
             var scriptProperties = PropertiesService.getScriptProperties();
             scriptProperties.setProperty('notify_email', result);
     }
+}
+
+/* 
+    Just a placeholder at the moment
+*/
+function getEmailList() {
+    return JSON.stringify(['example@example.com']);
 }

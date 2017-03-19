@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "dev/",
+			"file_exclude_patterns": [
+				"*.ejs"
+			]
 		},
 		{
 			"path": "test/",

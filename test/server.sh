@@ -15,4 +15,4 @@ done
 
 cd ..
 
-nodemon $TESTPATH/server.js
+nodemon -w dev $TESTPATH/server.js
