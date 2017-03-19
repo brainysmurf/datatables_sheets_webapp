@@ -24,6 +24,7 @@ You now have a gamified journal running on a document. (Full add-on support has 
 ## Getting Started: Develop the app
 
 * Run the app, as above
+* Install nodemon to your system path: `npm install nodemon -g`
 * Run the app locally, running `test/server.sh` (Browser must support [Proxy](http://caniuse.com/#search=proxy))
 * Any changes in the `dev/` folder automatically reflect in the browser upon saving
 * Publish to the cloud with `./upload`, which copies files to `src/` and then run `gapps upload` for you (which uses `src/` as the source to copy to the cloud)
