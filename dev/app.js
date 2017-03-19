@@ -68,14 +68,11 @@
       .setTitle('Gamified Journal')
 
     ui.showSidebar(html);
-
   };
 
   app.createMenus = function(ui) {
     ui.createMenu('Gamified Journal')
-      .addItem('Start', 'start')
-      .addSeparator()
-      .addItem('Finished!', 'finish');
+      .addItem('Open Sidebar', 'onOpen')
   };
 
   app.insertHROnTop = function() {
