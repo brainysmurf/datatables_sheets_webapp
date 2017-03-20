@@ -3,7 +3,6 @@
 
 	let assert = require('chai').assert;
 	let virtual = require('./virtual.js');
-	let sinon = require('sinon');
 
 
 	describe("Core document functions", function () {
