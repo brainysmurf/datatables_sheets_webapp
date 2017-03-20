@@ -1,5 +1,3 @@
-'use script';
-
 /*
   main program
   Builds an app object on the global context; all properties are functions
@@ -7,11 +5,20 @@
 
   Usage:
 
+  //
+  // file.js
+  // =======
   function onOpen() {
     app.onOpen();  // app will already be defined in the global context
   }
 */
 
+'use strict';
+
+/*
+  Build upon the globalContext (passed as this below) to define all our variables in the "app" variable
+  We'll have all the virtualized stuff there in the local stack (thus, name conflicts are still possible)
+*/
 (function(globalContext) {
 
   globalContext.app = {};
@@ -145,12 +152,3 @@
   };
 
 })(this);
-
-/*
-  (function (globalContext) {
-    ...
-  })(this);
-  
-  Build upon the globalContext is a better way of doing it, but note that
-  we'll have all the virtualized stuff there in the local stack (naming conflict are possible)
-*/
