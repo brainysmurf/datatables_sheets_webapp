@@ -103,9 +103,9 @@ let MockedObjects = {
 	},
 	production: false,
 
-	DocumentApp: {
-		getActiveDocument: function () {
-			return new Document();
+	SpreadsheetApp: {
+		getActiveSpreadsheet: function () {
+			return new Spreadsheet();
 		},
 
 		/* constants */

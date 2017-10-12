@@ -35,7 +35,7 @@ hr {
 
 #sidebar {
     display: table-cell;
-    width: 300px;
+    width: 100%;
     border: 1px solid #eee;
 }
 
@@ -65,7 +65,7 @@ hr {
     </div>
 
     <!-- Append -->
-    <div id="sidebarTitlebarID" class="sidebarTitlebar">Gamified Journal</div>
+    <div id="sidebarTitlebarID" class="sidebarTitlebar">Datatables for Sheets</div>
 
 </div>
 
@@ -106,7 +106,7 @@ $(function () {
     var getter = {
 
         clientSideMocks: {
-            start: function () { 
+            saveInfo: function () { 
                 $new = $('<div>', {
                     html: $('<input/>', {
                         class: "documentText",
@@ -116,15 +116,14 @@ $(function () {
                 $new.append('<hr>');
                 $('#documentContent').prepend($new);
             },
-            finish: function (duration) {
+            returnData: function (duration) {
                 // duration is nothing in the clientside; unused
-                $docText = $('.documentText:first');
-                $docText.before($('<h1>', {
-                    text:"Placeholder",
-                }));
-            },
-            notify: function () {
-                console.log("notify");
+                var columns = [
+                    {name: 'first'},
+                    {name: 'second'}
+                    ],
+                    rows = [ ['soemthing', 'else']];
+                return {columns: columns, rows: rows};
             },
         },
 
@@ -147,6 +146,7 @@ $(function () {
                 var promise = new Promise(
                     function (resolve, reject) {
                         try {
+                            console.log(name)
                             var result = this.clientSideMocks[name](/* the arg would go here */);
                             resolve(result);
                         } catch(err) {

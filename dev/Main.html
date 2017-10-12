@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/pepper-grinder/jquery-ui.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+  </script>
+
+  <?!= include('css'); ?>
+
+  <?/*include('development');*/?>
+
+</head>
+
+<body>
+
+  <div id="tabs">
+    <ul>
+      <li><a href="#display">Display</a></li>
+      <li><a href="#source">Source</a></li>
+    </ul>
+
+    <div id="display">
+      <div class="title">Here is the datatable:</div>
+      <table id="theDatatable"></table>
+    </div>
+
+
+    <div id="source">
+      <div>
+        <div class="title">Define the data source:</div>
+
+      </div>
+      <div>
+        <label for="rangeNotation">Sheet Range Notation: </label>
+        <input id="rangeNotation" />
+      </div>
+      <div id="buttonSave">Save</div>
+    </div>
+
+  </div>
+
+  <?!= include('javascript', virtual()); ?>
+</body>
