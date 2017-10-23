@@ -8,68 +8,56 @@ function returnData() {
 $(function () {
 	// Document DOM is ready:
 
-	// Convenience function to set disabled of buttons
-	var setbtnDisabled = function($btn, bool) {
-		$btn.button('option', 'disabled', bool);
-		return $btn;
-	};
-
-	// Convenience variables
-	var $buttonSave = $('#buttonSave'),
-		$theDatatable = $('#theDatatable');
-
-	$buttonSave.button({
-		disabled: false,
-	});
-
 	// Make the tabs
 	$('#tabs').tabs();
 
-	// When the user clicks on the start button...
-	$buttonSave.click(function () {
-
-		// 
-		// Interact with the document
-		//
-
-		google.script.run
-
-			.withSuccessHandler(function () {
-				// After function start runs in interface, make the clock go
-				// and update the user interface appropriately
-				setbtnDisabled($buttonSave, false);
-				// this way the user can start typing immediately
-			}.bind(this))  // pass on the button to the success handler
-
-			.withFailureHandler(function (error) {
-				console.log(error);
-			})
-
-		.saveInfo();  // interact with document with Google API calls
-
-	});
 
 	google.script.run
 
-		.withSuccessHandler(function (rawData) {
-			console.log(rawData);
-			$dt = $('#theDatatable');
-			$DT = $dt.DataTable({
-				columns: rawData.columns
-				});
+      .withSuccessHandler(function (rawData) {
+          var template = $.parseHTML(rawData.template || ""),
+              $template = $(template),
+              columns = rawData.columns.reduce(function (acc, col, ind) {
+                acc.push({title: col, data: col});
+                return acc;
+              }, []) || [];
 
-			rawData.rows.forEach(function (row) {
-				$DT.row.add(row);
-			});
-			$DT.draw();
-			// After function start runs in interface, make the clock go
-			// and update the user interface appropriately
+          // Makes the datatable
+          var settings = {
+              columns: columns,
+          };
 
-		}.bind(this))  // pass on the button to the success handler
+          var templateCache = columns.reduce(function (acc, col) {
+            acc[col.title] = $template.find('#'+ col.title).html() || "{{self}}";
+            return acc;
+          }, {});
 
-		.withFailureHandler(function (error) {
-			console.log(error);
-		})
+          var rowsToBeAdded = rawData.rows.reduce(function (acc, row) {
+              var valueObj = columns.reduce(function (a, col, index) {
+                a[col.title] = row[index];
+                return a;
+              }, {});
+              var result = columns.reduce(function (a, col) {
+                var before = templateCache[col.title];
+                var combined = Object.assign(valueObj, {self: valueObj[col.title]});
+                var after = Handlebars.compile(before)( combined );
+                a[col.title] = after;
+                return a;
+              }, {});
+              acc.push(result);
+              return acc;
+          }, []);
+
+          $DT = $(rawData.selector).DataTable({
+          	columns: columns,
+          	data: rowsToBeAdded,
+          });
+       })
+
+      .withFailureHandler(function (error) {
+      	  console.log("eeror");
+          console.log(error);
+      })
 
 	.returnData();  // interact with document with Google API calls
 

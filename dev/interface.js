@@ -10,26 +10,17 @@
     Called when user clicks on Start button
     Updates the document to have a horizontal rule and command text
 */
+
 function returnData() {
     var ssId = '177yLqYuE2JUsuKPCUeqH5DtlBmNuPSwp7fxM73Mb-gk',
         rangeNotation = 'just use DataRange';
 
-    var data = SpreadsheetApp.openById(ssId).getDataRange().getValues(),
-        columns = [], rows = [];
-    
-    data[0].forEach(function (column) {
-        columns.push({name: column});
-    });
-    
-    data.slice(1).forEach(function (row) {
-      rows.push(row);
-    });
-    var ret = {columns: columns, rows: rows};
-    
-    return ret;
-}
+    var data = SpreadsheetApp.openById(ssId).getDataRange().getValues();
+    var template = HtmlService.createTemplateFromFile('Template').getRawContent();
 
-function saveInfo() {
-    return;
+    return {
+        columns: data[0],
+        rows: data.slice(1),
+        template: template
+    };
 }
-

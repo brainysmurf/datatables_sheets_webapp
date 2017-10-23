@@ -118,12 +118,21 @@ $(function () {
             },
             returnData: function (duration) {
                 // duration is nothing in the clientside; unused
-                var columns = [
-                    {name: 'first'},
-                    {name: 'second'}
-                    ],
-                    rows = [ ['soemthing', 'else']];
-                return {columns: columns, rows: rows};
+                var columns = ['first', 'second'],
+                    rows = [
+                        ['something', 'else'],
+                        ['something', 'wicked'],
+                        ['something', 'this'],
+                        ['something', 'way'],
+                        ['something', 'else'],
+                        ['comes', 'else'],
+                    ];
+                return {
+                    columns: columns,
+                    rows: rows,
+                    selector: '#theDatatable',
+                    template: "",
+                };
             },
         },
 
