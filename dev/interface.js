@@ -17,10 +17,12 @@ function returnData() {
 
     var data = SpreadsheetApp.openById(ssId).getDataRange().getValues();
     var template = HtmlService.createTemplateFromFile('Template').getRawContent();
+    var filters = HtmlService.createTemplateFromFile('Filters').getRawContent();
 
     return {
         columns: data[0],
         rows: data.slice(1),
-        template: template
+        template: template,
+        filters: filters
     };
 }

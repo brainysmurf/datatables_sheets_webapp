@@ -106,16 +106,6 @@ $(function () {
     var getter = {
 
         clientSideMocks: {
-            saveInfo: function () { 
-                $new = $('<div>', {
-                    html: $('<input/>', {
-                        class: "documentText",
-                        placeholder: "Start writing!",
-                    }),
-                });
-                $new.append('<hr>');
-                $('#documentContent').prepend($new);
-            },
             returnData: function (duration) {
                 // duration is nothing in the clientside; unused
                 var columns = ['first', 'second'],
@@ -131,7 +121,8 @@ $(function () {
                     columns: columns,
                     rows: rows,
                     selector: '#theDatatable',
-                    template: "",
+                    template: '<div><div id="first"><b>{{self}}</b></div><div id="second"><i>{{self}}</i></div></div>',
+                    filters: '<div><div id="first"><select><option value="">Choose...</option></select></div><div id="second"><input type="text" placeholder="Search {{title}}" /></div></div>',
                 };
             },
         },
@@ -155,7 +146,6 @@ $(function () {
                 var promise = new Promise(
                     function (resolve, reject) {
                         try {
-                            console.log(name)
                             var result = this.clientSideMocks[name](/* the arg would go here */);
                             resolve(result);
                         } catch(err) {

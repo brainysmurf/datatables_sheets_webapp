@@ -11,51 +11,118 @@ $(function () {
 	// Make the tabs
 	$('#tabs').tabs();
 
+  var cc = {
+    'first': {
+      categoryFilter: true,
+      title: 'The First',
+    },
+
+    'second': {
+      stringFilter: true,
+      title: 'Here you go'
+    }
+  }
 
 	google.script.run
 
       .withSuccessHandler(function (rawData) {
           var template = $.parseHTML(rawData.template || ""),
               $template = $(template),
-              columns = rawData.columns.reduce(function (acc, col, ind) {
-                acc.push({title: col, data: col});
+              filters = $.parseHTML(rawData.filters || ""),
+              $filters = $(filters),
+              columns = rawData.columns.reduce(function (acc, col) {
+                var mapped = cc[col] ||  {title: col};
+                mapped.data = col;
+                acc.push(mapped);
                 return acc;
               }, []) || [];
+
+          var hasFilters = columns.some(function (obj) {
+            return (obj.hasOwnProperty('categoryFilter') && obj.categoryFilter) ||
+                   (obj.hasOwnProperty('stringFilter') && obj.stringFilter);
+          });
 
           // Makes the datatable
           var settings = {
               columns: columns,
           };
 
+          if (hasFilters) {
+            $('#displayFilters').empty();
+            $('#displayTable').css('width', '70%');
+            $('#displayFilters').css('display', 'table-cell').css('width', '30%');
+            settings.initComplete = function () {
+              this.api().columns().every( function () {
+                  var column = this,
+                      title = column.dataSrc();
+
+                  if ((cc[title] || {categoryFilter: false}).categoryFilter) {
+                    var $select = $(Handlebars.compile($($filters.find('#'+title)).html()) ( cc[title] ))
+                        .addClass('filterType')
+                        .appendTo( $('#displayFilters') )
+                        .on( 'change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+     
+                            var newValue  = val ? '^'+val+'$' : '';
+                            column
+                                .search( newValue, true, false )
+                                .draw();
+                        } );
+
+                    column.data().unique().sort().each( function ( d, j ) {
+                        var newValue = $(d).text();
+                        $select.append( '<option value="'+newValue+'">'+newValue+'</option>' )
+                    } );
+                  }
+
+                  if ((cc[title] || {stringFilter: false}).stringFilter) {
+                    var $input = $(Handlebars.compile($($filters.find('#'+title)).html()) ( cc[title] ))
+                        .addClass('filterType')
+                        .appendTo( $('#displayFilters') )
+                        .on( 'keyup change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+     
+                            var newValue  = val || '';
+                            column
+                                .search( newValue, true, false )
+                                .draw();
+                        } );
+
+                  }
+              } );
+            };
+          }
+
           var templateCache = columns.reduce(function (acc, col) {
-            acc[col.title] = $template.find('#'+ col.title).html() || "{{self}}";
+            acc[col.data] = $template.find('#'+ col.data).html() || "{{self}}";
             return acc;
           }, {});
 
           var rowsToBeAdded = rawData.rows.reduce(function (acc, row) {
               var valueObj = columns.reduce(function (a, col, index) {
-                a[col.title] = row[index];
+                a[col.data] = row[index];
                 return a;
               }, {});
               var result = columns.reduce(function (a, col) {
-                var before = templateCache[col.title];
-                var combined = Object.assign(valueObj, {self: valueObj[col.title]});
+                var before = templateCache[col.data];
+                var combined = Object.assign(valueObj, {self: valueObj[col.data]});
                 var after = Handlebars.compile(before)( combined );
-                a[col.title] = after;
+                a[col.data] = after;
                 return a;
               }, {});
               acc.push(result);
               return acc;
           }, []);
 
-          $DT = $(rawData.selector).DataTable({
-          	columns: columns,
-          	data: rowsToBeAdded,
-          });
+          settings.data = rowsToBeAdded;
+          $DT = $(rawData.selector).DataTable(settings);
        })
 
       .withFailureHandler(function (error) {
-      	  console.log("eeror");
           console.log(error);
       })
 
