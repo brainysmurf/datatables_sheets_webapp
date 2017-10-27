@@ -26,8 +26,10 @@ You can now display spreadsheet data through an instance of datatables
 * Install nodemon to your system path: `npm install nodemon -g`
 * Install mocha `npm install mocha`
 * Install the dependencies: `npm install`
+* Optionally (but recommended), open the project.sublime-project file which presents only the relevant files
+relevant for the web app development
 * Run the app locally, running `test/server.sh`
-* Load `http://localhost:8888/Sidebar` in your browser of choice (must support [Proxy](http://caniuse.com/#search=proxy))
+* Load `http://localhost:8888/Main` in your browser of choice (must support [Proxy](http://caniuse.com/#search=proxy))
 * Any changes in the `dev/` folder automatically reflect in the browser (after refresh)
 * Publish to the cloud with `./upload`, which copies files to `src/` and then run `gapps upload` for you (which uses `src/` as the source to copy to the cloud)
 * Changes are now reflected in the cloud (reload and test)

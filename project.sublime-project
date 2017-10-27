@@ -8,16 +8,26 @@
 			]
 		},
 		{
-			"path": "test/",
+			"path": "test",
 			"file_exclude_patterns": [
 				"server.*"
 			]
 		},
 		{
-			"path": "src/",
+			"path": "src",
 			"file_include_patterns": [
-				"production.*"
+				"production.js"
 			]
-		}
+		},
+		{
+			"path": ".",
+			"name": "Root",
+			"file_include_patterns": [
+				"*.md"
+			],
+			"folder_exclude_patterns": [
+				"*"
+			],
+		},
 	]
 }
