@@ -2,3 +2,4 @@ node_modules
 src/*
 gapps.config.json
 package.json
+dev/*.ejs

@@ -9,10 +9,8 @@
 
 'use strict';
 
-let moment = require('moment');
 let gas = require('gas-local');
 let ejs = require('ejs');
-let Document = require('./Document.js');
 const sourcePath = 'dev';
 
 var googleRunScript = {
@@ -96,28 +94,13 @@ let MockedObjects = {
 				editor: {
 					focus: function () { /* TBI */; },
 				},
-				setHeight: function (height) { /* TBI */; },
-				setWidth: function (width) { /* TBI */; },
 			}
 		}
 	},
 	production: false,
 
-	SpreadsheetApp: {
-		getActiveSpreadsheet: function () {
-			return new Spreadsheet();
-		},
-
-		/* constants */
-		ElementType: {
-			HORIZONTAL_RULE: '<hr>',
-		}
-	},
-
-	Moment: moment,
 	__proto__: gas.globalMockDefault,
 };
-MockedObjects.Moment.load = function () {};  // load is part of GAS ecosystem
 var virtual = gas.require('./' + sourcePath, MockedObjects);
 
 // Passed into include in order to ensure templates have virtual source too

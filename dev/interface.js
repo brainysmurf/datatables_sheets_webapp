@@ -23,6 +23,7 @@ function returnData() {
         columns: data[0],
         rows: data.slice(1),
         template: template,
-        filters: filters
+        filters: filters,
+        selector: '#theDatatable'
     };
 }

@@ -3,72 +3,6 @@ Code that only runs on local clientside
 Excluded from copying to source folder
 -->
 
-<style>
-
-h1 {
-    font-size: 1em;
-    height: 1em;
-}
-
-hr {
-    border-style: solid;
-    border-width: 1px;
-    color: #999;
-}
-
-#wrapper {
-    display: table;
-    width: 600px;
-}
-
-#row {
-    display: table-row;
-}
-
-#documentContent {
-    display: table-cell;
-    width: 300px;
-    border: 1px solid #eee;
-    border-right: none;
-    padding: 5px;
-}
-
-#sidebar {
-    display: table-cell;
-    width: 100%;
-    border: 1px solid #eee;
-}
-
-.documentText {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-#bodyContent {
-    margin: 8px;
-}
-</style>
-
-<div id="developmentHtml" style="display:none">
-    <!-- 1: Wrap -->
-    <div id="wrapper">
-        <div id="row">
-        </div>
-    </div>
-
-    <!-- Append -->
-    <div id="documentContent"></div>
-    
-    <!-- Append -->
-    <div id="sidebar">
-        <div id="bodyContent"></div>
-    </div>
-
-    <!-- Append -->
-    <div id="sidebarTitlebarID" class="sidebarTitlebar">Datatables for Sheets</div>
-
-</div>
-
 <script>
 
 $(function () {
@@ -185,8 +119,6 @@ $(function () {
                 editor: {
                     focus: function () { /* TBI */; },
                 },
-                setHeight: function (height) { /* TBI */; },
-                setWidth: function (width) { /* TBI */; },
             }
         },
     }
