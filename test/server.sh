@@ -1,10 +1,9 @@
 #!/bin/bash
 
-OLD=`pwd`
 DEVPATH="dev"
 TESTPATH="test"
 
-trap "echo; echo Removing previously created files; rm $DEVPATH/*.ejs; exit" SIGHUP SIGINT SIGTERM
+trap "echo; echo Removing .ejs files; rm $DEVPATH/*.ejs; exit" SIGHUP SIGINT SIGTERM
 
 cd $DEVPATH
 
@@ -15,4 +14,4 @@ done
 
 cd ..
 
-nodemon -w dev -w test $TESTPATH/server.js
+nodemon -w dev -w test $TESTPATH/server.js "$@"
