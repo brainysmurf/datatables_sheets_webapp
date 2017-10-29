@@ -7,19 +7,11 @@ let virtual = require('./virtual.js');
 let queryString = require('query-string');
 const sourcePath = 'dev';
 
-var queries = {};
+function isEmpty(obj) { 
+   for (var x in obj) { return false; }
+   return true;
+}
 
-// Read in queries
-process.argv.slice(2).forEach(function (val, index, array) {
-	// pass along as query
-	//console.log(index + ': ' + val);
-	try {
-		var htmlAsQuery = fs.readFileSync('dev/' + val + ".html", 'utf-8');
-		queries[val.toLowerCase()] = htmlAsQuery;
-	} catch (e) {
-		console.log(e)
-	}
-});
 
 function raise404 (res) {
 	res.writeHead(404, {"Content-Type": "text/html"});
@@ -27,21 +19,25 @@ function raise404 (res) {
 }
 
 (function () { 
+
 	let server = connect();
 
 	server.use(function(req, res, next) {
+
+		var matches = /(.*)\?(.*)/.exec(req.url),
+			endpoint = req.url.indexOf('?') == -1 ? req.url : matches[1],
+			reqQuery = req.url.indexOf('?') == -1 ? {} : queryString.parse(matches[2]);
+
 		if (req.url === '/') {
 			console.log("Blank path sent in, enter a view");
 			raise404(res);
 			next();
 		} else {
-			console.log(req.url);
-			var endpoint = req.url.match(/(.*)\??.*/g)[1],
-				basename = endpoint + '.html',
+			var basename = endpoint + '.html',
 				filePath = path.join(sourcePath, basename),
 				params = virtual;
 				options = {delimiter: "?", filename: filePath};
-			console.log('endpoint: ' + endpoint);
+
 			// Read in file contents directly, so we can manipulate it
 			try {
 				var data = fs.readFileSync(filePath, 'utf-8');
@@ -52,9 +48,23 @@ function raise404 (res) {
 				return;
 			}
 
-			if (queries) {
+			if (isEmpty(reqQuery)) {
 				// reroute them so that the client-side js has access to them
-				res.writeHead(302, {Location: req.url + "?" + queryString.stringify(queries)});
+				var queries = {};
+
+				// Read in queries
+				process.argv.slice(2).forEach(function (val, index, array) {
+					// pass along as query
+					try {
+						var htmlAsQuery = fs.readFileSync('dev/' + val + ".html", 'utf-8');
+						queries[val.toLowerCase()] = htmlAsQuery;
+					} catch (e) {
+						console.log(e)
+					}
+				});
+
+				var query = queryString.stringify(queries);
+				res.writeHead(302, {Location: req.url + query ? ('?' + query) : ""});
 				res.end();
 			} else {
 				//

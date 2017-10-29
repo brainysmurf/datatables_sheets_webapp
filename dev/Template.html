@@ -1,9 +1,60 @@
-<div>
-	<div id="first" data-filter="select">
-		<b>{{first}}</b>
+<div data-scroll-y="400px"
+     data-scroll-collapse="true"
+     data-paging="false"
+     data-scroll-x="false"
+     data-auto-width="true"
+     data-searching="false"
+     >
+	<div id="groupName"
+	 	 data-f-title="Description"
+	 	 data-f-type="select"
+	     data-hidden="true"
+	     data-width="2em"
+	 	 >
+		<b>{{self}}</b>
 	</div>
 
-	<div id="second" data-filter="input">
-		<i>{{second}}</i>		
+	<div id="parentsOf"
+		 data-f-title="Parents of"
+	     data-f-type="select"
+	     data-hidden="true"
+	     data-c-width="200px"
+	     >
+		<i>{{self}}</i>		
 	</div>
+
+	<div id="groupEmail"
+		 data-f-title="Group Emaill Address"
+	     data-f-label="Group Email Address"
+	     >
+		<a href="{{self}}">{{self}}</a>		
+	</div>
+
+	<div id="member"
+	     data-f-type="input"
+	     data-f-label="Search by memberships..."
+	     data-hidden="true"
+ 	     data-width="2em"
+	     >
+		 {{self}}
+	</div>
+
+	<div id="human"
+	     data-f-title="Last Login"
+	     >
+	     {{self}}
+	</div>
+
+	<div id="raw"
+	     data-f-meta="hidden"
+	     >
+	</div>
+
+	<div id="forwardsTo"
+	     data-f-type="input"
+	     data-f-title="Forwards to"
+	     >
+		 {{self}}
+	</div>
+
 </div>

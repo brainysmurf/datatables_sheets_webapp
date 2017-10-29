@@ -11,91 +11,110 @@ $(function () {
 	// Make the tabs
 	$('#tabs').tabs();
 
-  var cc = {
-    'first': {
-      categoryFilter: true,
-      title: 'The First',
-    },
-
-    'second': {
-      stringFilter: true,
-      title: 'Here you go'
-    }
-  }
-
 	google.script.run
 
       .withSuccessHandler(function (rawData) {
+          $('<tfoot/>').appendTo(rawData.selector);
+
           var template = $.parseHTML(rawData.template || ""),
               $template = $(template),
-              filters = $.parseHTML(rawData.filters || ""),
-              $filters = $(filters),
-              columns = rawData.columns.reduce(function (acc, col) {
-                var mapped = cc[col] ||  {title: col};
-                mapped.data = col;
-                acc.push(mapped);
-                return acc;
-              }, []) || [];
+              columns = template ? 
+                $template.find('div').toArray().reduce(function (acc, div) {
+                  var $div = $(div);
+                  var mapped = {
+                    title: $div.data('f-title') || $div.attr('id'),
+                    type: $div.data('f-type') || null,
+                    visible: $div.data('hidden') || false
+                  };
+                  if ($div.data('width')) {
+                    mapped.width = $div.data('width');
+                  }
+                  mapped.data = $div.attr('id');
+                  acc.push(mapped);
+                  return acc;
+                }, [])
+              :
+                rawData.columns.reduce(function (acc, col) {
+                  mapped.data = col;
+                  acc.push({
+                    title: col, data:col,
+                    stringFilter: false, categoryFilter: false
+                  });
+                  return acc;
+                }, []);
 
-          var hasFilters = columns.some(function (obj) {
-            return (obj.hasOwnProperty('categoryFilter') && obj.categoryFilter) ||
-                   (obj.hasOwnProperty('stringFilter') && obj.stringFilter);
+          var hasSideFilters = $template.find('div').toArray().some(function (div) {
+            var $div = $(div);
+            return ($div.data('f-placement') == 'top' && $div.attr('id'))|| false;
           });
 
           // Makes the datatable
-          var settings = {
-              columns: columns,
-          };
+          var settings = $.extend({}, $template.data());  // copy
+          settings.columns = columns;
 
-          if (hasFilters) {
-            $('#displayFilters').empty();
-            $('#displayTable').css('width', '70%');
-            $('#displayFilters').css('display', 'table-cell').css('width', '30%');
-            settings.initComplete = function () {
-              this.api().columns().every( function () {
-                  var column = this,
-                      title = column.dataSrc();
-
-                  if ((cc[title] || {categoryFilter: false}).categoryFilter) {
-                    var $select = $(Handlebars.compile($($filters.find('#'+title)).html()) ( cc[title] ))
-                        .addClass('filterType')
-                        .appendTo( $('#displayFilters') )
-                        .on( 'change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-     
-                            var newValue  = val ? '^'+val+'$' : '';
-                            column
-                                .search( newValue, true, false )
-                                .draw();
-                        } );
-
-                    column.data().unique().sort().each( function ( d, j ) {
-                        var newValue = $(d).text();
-                        $select.append( '<option value="'+newValue+'">'+newValue+'</option>' )
-                    } );
-                  }
-
-                  if ((cc[title] || {stringFilter: false}).stringFilter) {
-                    var $input = $(Handlebars.compile($($filters.find('#'+title)).html()) ( cc[title] ))
-                        .addClass('filterType')
-                        .appendTo( $('#displayFilters') )
-                        .on( 'keyup change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-     
-                            var newValue  = val || '';
-                            column
-                                .search( newValue, true, false )
-                                .draw();
-                        } );
-
-                  }
-              } );
-            };
+          if (hasSideFilters) {
+            // 
+            // Add extra html to account for the sidebar required for filters on the side
+            //
+            $('#theDatatable').wrap( $('<div/>', {
+              id: 'displayTable', 
+              class: 'displayCell'
+            }));
+            $('#displayTable').wrap( $('<div/>', {
+              id: 'displayContainer',
+            }));
+            $('#displayContainer').prepend( $('<div/>', {
+              id: 'displayFilters', 
+              class: 'displayCell',
+            }));
           }
+
+          settings.initComplete = function () {
+            this.api().columns().every( function () {
+                var column = this,
+                    title = column.dataSrc(),
+                    $div = $template.find('#'+title);
+
+                if ($div.data('f-type') == 'select') {
+                  var $select = $('<select><option value=""></option></select>')
+                      .addClass('filterType')
+                      .insertBefore( $(column.footer()) )
+                      .on( 'change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex($(this).val());     
+                          var newValue  = val ? '^'+val+'$' : '';
+                          console.log(newValue);
+                          column
+                              .search( newValue, true, false )
+                              .draw();
+                      } );
+
+                  column.data().unique().sort().each( function ( d, j ) {
+                      var $d = $(d);
+                      $select.append( '<option value="'+$d[0].outerHTML+'">'+$d.text()+'</option>' );
+                  } );
+                }
+
+                if ($div.data('f-type') == 'input') {
+                  var $input = $('<input placeholder="' + ($div.data('f-label') || 'Search...') + '"/>')
+                      .addClass('filterType')
+                      .appendTo( $(column.footer()).empty() )
+                      .on( 'keyup change', function () {
+                          var val = $.fn.dataTable.util.escapeRegex(
+                              $(this).val()
+                          );
+   
+                          var newValue  = val || '';
+                          console.log(newValue);
+                          column
+                              .search( newValue, true, false )
+                              .draw();
+                      } );
+
+                }
+            } );
+            console.log('initcomplete complete');
+          };
+      
 
           var templateCache = columns.reduce(function (acc, col) {
             acc[col.data] = $template.find('#'+ col.data).html() || "{{self}}";
@@ -108,7 +127,7 @@ $(function () {
                 return a;
               }, {});
               var result = columns.reduce(function (a, col) {
-                var before = templateCache[col.data];
+                var before = $.trim(templateCache[col.data]);  // remove whitespace to preserve search
                 var combined = Object.assign(valueObj, {self: valueObj[col.data]});
                 var after = Handlebars.compile(before)( combined );
                 a[col.data] = after;

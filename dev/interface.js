@@ -12,18 +12,16 @@
 */
 
 function returnData() {
-    var ssId = '177yLqYuE2JUsuKPCUeqH5DtlBmNuPSwp7fxM73Mb-gk',
+    var ssId = '1d1jyKzTETsEjkyvUAzdLnFiDjGHI2y7y4cZPfVcXr3Y',
         rangeNotation = 'just use DataRange';
 
-    var data = SpreadsheetApp.openById(ssId).getDataRange().getValues();
-    var template = HtmlService.createTemplateFromFile('Template').getRawContent();
-    var filters = HtmlService.createTemplateFromFile('Filters').getRawContent();
+    var data = SpreadsheetApp.openById(ssId).getSheetByName('member_list').getDataRange().getValues(),
+        template = HtmlService.createTemplateFromFile('Template').getRawContent();
 
     return {
         columns: data[0],
-        rows: data.slice(1),
+        rows: data.slice(2),  // temp, fix later
         template: template,
-        filters: filters,
         selector: '#theDatatable'
     };
 }

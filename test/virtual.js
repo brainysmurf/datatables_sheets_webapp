@@ -10,7 +10,6 @@
 'use strict';
 
 let gas = require('gas-local');
-let ejs = require('ejs');
 const sourcePath = 'dev';
 
 var googleRunScript = {
