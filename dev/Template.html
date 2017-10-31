@@ -1,39 +1,45 @@
 <div data-scroll-y="400px"
      data-scroll-collapse="true"
      data-paging="false"
-     data-scroll-x="false"
+     data-scroll-x="true"
      data-auto-width="true"
      data-searching="false"
+     data-add-class="displayTable"
      >
+
 	<div id="groupName"
-	 	 data-f-title="Description"
+	 	 data-title="Description"
 	 	 data-f-type="select"
-	     data-hidden="true"
+	     data-visible="true"
 	     data-width="2em"
+	     data-orderable="false"
 	 	 >
 		<b>{{self}}</b>
 	</div>
 
 	<div id="parentsOf"
-		 data-f-title="Parents of"
-	     data-f-type="select"
-	     data-hidden="true"
+		 data-title="Parents of"
+		 data-f-type="select"
+		 data-class-name="dt-center"
+	     data-visible="true"
+	     data-searchable="false"
 	     data-c-width="200px"
 	     >
 		<i>{{self}}</i>		
 	</div>
 
 	<div id="groupEmail"
-		 data-f-title="Group Emaill Address"
+		 data-title="Group Emaill Address"
 	     data-f-label="Group Email Address"
 	     >
 		<a href="{{self}}">{{self}}</a>		
 	</div>
 
 	<div id="member"
+		 data-title="Parent Email"
 	     data-f-type="input"
 	     data-f-label="Search by memberships..."
-	     data-hidden="true"
+	     data-visible="true"
  	     data-width="2em"
 	     >
 		 {{self}}

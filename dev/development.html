@@ -53,7 +53,12 @@ $(function () {
             returnData: function (duration) {
                 // duration is nothing in the clientside; unused
                 var columns = ['groupName', 'parentsOf', 'groupEmail', 'member', 'human', 'raw', 'forwardsTo'],
-                    rows = [[]];
+                    rows = [
+                        ['Group Name 1', '1', 'group_name_1@igbis.edu.my', 'someone@igbis.edu.my', '', 'Never', 'forwardingAddy'],
+                        ['Group Name 1', '1', 'group_name_1@igbis.edu.my', 'someoneElse@igbis.edu.my', '', 'Never', 'forwardingAddy'],
+                        ['Group Name 2', '2', 'group_name_2@igbis.edu.my', 'someoneOver@igbis.edu.my', '', 'Never', 'forwardingAddy'],
+                        ['Group Name 2', '2', 'group_name_2@igbis.edu.my', 'someoneOverTheRainbow@igbis.edu.my', '', 'Never', 'forwardingAddy'],
+                    ];
                 var queryObj = getUrlVars();
                 return {
                     columns: columns,

@@ -21,14 +21,8 @@ $(function () {
               columns = template ? 
                 $template.find('div').toArray().reduce(function (acc, div) {
                   var $div = $(div);
-                  var mapped = {
-                    title: $div.data('f-title') || $div.attr('id'),
-                    type: $div.data('f-type') || null,
-                    visible: $div.data('hidden') || false
-                  };
-                  if ($div.data('width')) {
-                    mapped.width = $div.data('width');
-                  }
+                  var mapped = $div.data();
+                  mapped.title = $div.data('title') || $div.attr('id');
                   mapped.data = $div.attr('id');
                   acc.push(mapped);
                   return acc;
@@ -138,7 +132,9 @@ $(function () {
           }, []);
 
           settings.data = rowsToBeAdded;
-          $DT = $(rawData.selector).DataTable(settings);
+          $DT = $(rawData.selector)
+            .addClass($template.data('add-class'))
+            .DataTable(settings);
        })
 
       .withFailureHandler(function (error) {
