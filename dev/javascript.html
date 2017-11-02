@@ -14,8 +14,6 @@ $(function () {
 	google.script.run
 
       .withSuccessHandler(function (rawData) {
-          $('<tfoot/>').appendTo(rawData.selector);
-
           var template = $.parseHTML(rawData.template || ""),
               $template = $(template),
               columns = template ? 
@@ -24,6 +22,15 @@ $(function () {
                   var mapped = $div.data();
                   mapped.title = $div.data('title') || $div.attr('id');
                   mapped.data = $div.attr('id');
+                  if (!mapped.hasOwnProperty('title')) {
+                    mapped.title = $div.attr('id');
+                  }
+                  if (!mapped.hasOwnProperty('visible')) {
+                    mapped.visible = false;
+                  }
+                  if (mapped.fType) {
+                    mapped.sortable = false;
+                  }
                   acc.push(mapped);
                   return acc;
                 }, [])
@@ -39,7 +46,7 @@ $(function () {
 
           var hasSideFilters = $template.find('div').toArray().some(function (div) {
             var $div = $(div);
-            return ($div.data('f-placement') == 'top' && $div.attr('id'))|| false;
+            return ($div.data('f-placement') == 'left' && $div.attr('id'))|| false;
           });
 
           // Makes the datatable
@@ -70,37 +77,37 @@ $(function () {
                     $div = $template.find('#'+title);
 
                 if ($div.data('f-type') == 'select') {
-                  var $select = $('<select><option value=""></option></select>')
-                      .addClass('filterType')
-                      .insertBefore( $(column.footer()) )
+                  var header = $div.data('f-label') || $div.data('title') || title;
+                  var $select = $('<select><option value="">' + header + '</option></select>')
+                      .appendTo( $(column.header()).empty() )
                       .on( 'change', function () {
-                          var val = $.fn.dataTable.util.escapeRegex($(this).val());     
-                          var newValue  = val ? '^'+val+'$' : '';
+                          var val = $(this).val();  // $.fn.dataTable.util.escapeRegex( $(this).val() );
+                          var newValue  = val; // ? '^'+val+'$' : '';
                           console.log(newValue);
                           column
-                              .search( newValue, true, false )
+                              .search( newValue, true, false, true )
                               .draw();
                       } );
 
                   column.data().unique().sort().each( function ( d, j ) {
                       var $d = $(d);
-                      $select.append( '<option value="'+$d[0].outerHTML+'">'+$d.text()+'</option>' );
+                      if ($d.length == 1) {
+                        $select.append( '<option value="'+$d[0].outerHTML+'">'+$d.text()+'</option>' );
+                      } else {
+                        $select.append( '<option value="'+d+'">'+d+'</option>' );
+                      }
                   } );
                 }
 
                 if ($div.data('f-type') == 'input') {
-                  var $input = $('<input placeholder="' + ($div.data('f-label') || 'Search...') + '"/>')
-                      .addClass('filterType')
-                      .appendTo( $(column.footer()).empty() )
+                  var header = $div.data('f-label') || $div.data('title');
+                  var $input = $('<input placeholder="' + header + '"/>')
+                      .appendTo( $(column.header()).empty() )
                       .on( 'keyup change', function () {
-                          var val = $.fn.dataTable.util.escapeRegex(
-                              $(this).val()
-                          );
-   
+                          var val = $.fn.dataTable.util.escapeRegex( $(this).val() );   
                           var newValue  = val || '';
-                          console.log(newValue);
                           column
-                              .search( newValue, true, false )
+                              .search( newValue, true, false, true )
                               .draw();
                       } );
 
@@ -108,10 +115,9 @@ $(function () {
             } );
             console.log('initcomplete complete');
           };
-      
 
           var templateCache = columns.reduce(function (acc, col) {
-            acc[col.data] = $template.find('#'+ col.data).html() || "{{self}}";
+            acc[col.data] = $.trim($template.find('#'+ col.data).html() || "{{self}}");
             return acc;
           }, {});
 
@@ -121,7 +127,7 @@ $(function () {
                 return a;
               }, {});
               var result = columns.reduce(function (a, col) {
-                var before = $.trim(templateCache[col.data]);  // remove whitespace to preserve search
+                var before = templateCache[col.data];
                 var combined = Object.assign(valueObj, {self: valueObj[col.data]});
                 var after = Handlebars.compile(before)( combined );
                 a[col.data] = after;
@@ -133,7 +139,7 @@ $(function () {
 
           settings.data = rowsToBeAdded;
           $DT = $(rawData.selector)
-            .addClass($template.data('add-class'))
+            .addClass($template.data('add-class') || '')
             .DataTable(settings);
        })
 
