@@ -1,14 +1,27 @@
-<div>
+<div data-scroll-y="400px"
+     data-scroll-collapse="true"
+     data-paging="false"
+     data-scroll-x="false"
+     data-auto-width="true"
+     data-add-class="displayTable"
+     >
 
-	<div id="groupName">
-		{{self}}
+	<div id="groupName"
+	 	 data-title="Description"
+	 	 data-f-type="select"
+	     data-visible="true"
+	     data-class-name="dt-left"
+	 	 >
+		<b>{{self}}</b>
 	</div>
 
 	<div id="parentsOf"
+		 data-title="Parents of"
 		 data-f-type="select"
+		 data-class-name="dt-center"
 	     data-visible="true"
 	     >
-		<b>{{self}}</b>
+		<i>{{self}}</i>		
 	</div>
 
 	<div id="groupEmail"
@@ -32,11 +45,11 @@
 	<div id="human"
 	     data-title="Last Login"
 	     >
-	     <b>{{self}}</b>
 	</div>
 
 	<div id="raw"
-	     data-f-meta="hidden"
+	     data-visible="true"
+	     data-f-type="select"
 	     >
 	</div>
 

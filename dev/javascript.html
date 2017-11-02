@@ -83,16 +83,22 @@ $(function () {
                       .on( 'change', function () {
                           var val = $(this).val();  // $.fn.dataTable.util.escapeRegex( $(this).val() );
                           var newValue  = val; // ? '^'+val+'$' : '';
-                          console.log(newValue);
                           column
                               .search( newValue, true, false, true )
                               .draw();
                       } );
 
                   column.data().unique().sort().each( function ( d, j ) {
-                      var $d = $(d);
+                      try {
+                        var $d = $(d);
+                      } catch (e) {
+                        // jquery might produce a syntax error, so force it to use plaintext
+                        $d = [];
+                      }
                       if ($d.length == 1) {
-                        $select.append( '<option value="'+$d[0].outerHTML+'">'+$d.text()+'</option>' );
+                        // Apparently passing the html ($d[0].outerHTML) is incorrect,
+                        // but inspecting column.data() reveals the html is there, not sure why...
+                        $select.append( '<option value="'+$d.text()+'">'+$d.text()+'</option>' );
                       } else {
                         $select.append( '<option value="'+d+'">'+d+'</option>' );
                       }
@@ -113,11 +119,10 @@ $(function () {
 
                 }
             } );
-            console.log('initcomplete complete');
           };
 
           var templateCache = columns.reduce(function (acc, col) {
-            acc[col.data] = $.trim($template.find('#'+ col.data).html() || "{{self}}");
+            acc[col.data] = $.trim($template.find('#'+ col.data).html()) || "{{self}}";
             return acc;
           }, {});
 
