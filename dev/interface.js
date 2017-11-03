@@ -6,14 +6,10 @@
 
 'use strict';
 
-/*
-    Called when user clicks on Start button
-    Updates the document to have a horizontal rule and command text
-*/
 
 function returnData(ssId, rangeNotation) {
 
-    var data = SpreadsheetApp.openById(ssId).getRange(rangeNotation).getValues(),
+    var data = Sheets.Spreadsheets.Values.get(ssId, rangeNotation).values,
         template = HtmlService.createTemplateFromFile('Template').getRawContent();
 
     return {

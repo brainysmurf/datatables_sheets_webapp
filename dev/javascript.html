@@ -1,15 +1,9 @@
 <script>
 
-function returnData() {
-
-	return [];
-}
-
 $(function () {
 	// Document DOM is ready:
 
-	// Make the tabs
-	$('#tabs').tabs();
+  var $dt = $('#theDatatable');
 
 	google.script.run
 
@@ -164,7 +158,7 @@ $(function () {
           console.log(error);
       })
 
-	.returnData($('#theDatatable').data('source'));  // interact with document with Google API calls
+	.returnData($dt.data('source'), $dt.data('range'));  // interact with document with Google API calls
 
 
 });
