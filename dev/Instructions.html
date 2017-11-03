@@ -1,0 +1,170 @@
+<!--
+GETTING STARTED:
+	1) Make a new html file in the project, so it is named Table.html
+	2) Copy and paste the below code into that new file:
+-->
+
+<!-- Table.html -->
+<table 
+	id="theDatatable"
+	data-source=""
+	data-range=""
+	>
+</table>
+
+<!-- 
+GETTING STARTED:
+	3) Make a new html file in the project, so it is named css.html
+	4) Copy and paste the below code into that new file.
+	5) Adjust as necessary
+-->
+
+<style>
+
+label, legend, input, div {
+  font-family: Calibri;
+  font-size: 10pt;
+}
+
+</style>
+
+<!--
+GETTING STARTED (cont):
+	6) Put the ID of the source spreadsheet into data-source
+	7) Put the range notation into data-range
+	8) Make a new html file in the project, so it is named Template.html
+	9) Copy and paste the below code into that new file:
+-->
+
+<!-- Template.html -->
+<div>
+	<div id="columnName"
+		 data-title="Column Name"
+	     data-visible="true"
+	     >
+		{{self}}
+	</div>
+</div>
+
+<!--
+GETTING STARTED (cont):
+	7) For each column you would like to be displayed, make a child div (like the one with id="columnName")
+	8) "id" attribute needs to be the camelized (thisIsCamelized) version of the column name on the sheet
+	9) "data-title" (optional) can be the displayed name on the datatable
+   10) "data-visible" needs to be "true" (default is "false")
+   11) YOU'RE DONE
+-->
+
+
+
+
+
+<!--
+TWEAKING:
+	A) The table element in Table.html can be given class names such as "display" in order to
+	   get even/odd formatting (a feature of datatables)
+-->
+<table 
+	id="theDatatable"
+	class="display"
+	data-source="xxx"
+	data-range="yyy"
+	>
+</table>
+
+<!--
+TWEAKING:
+	B) a) The parent div element in Template.html can take on data attributes consistent with 
+ 	      datatables configurations
+       b) These configurations are documented here: https://www.datatables.net/manual/options
+	   c) Notice that camelCase is hypenated, i.e. scrollY is expanded to data-scroll-y
+-->
+<div data-scroll-y="400px"
+     data-scroll-collapse="true"
+     data-paging="false"
+     data-scroll-x="false"
+     data-auto-width="false"
+     data-add-class="display"
+     data-ordering="false"
+     data-dom="t"
+     >
+     <div id="columnName"></div>
+</div>
+
+<!--
+TWEAKING:
+	C) a) The child divs can also be augmented with data- attributes in order to match
+	      datatable configurations, documented here: https://datatables.net/reference/option/columns
+       b) Note that some of these settings depend upon settings on the parent div too, for example
+          auto-width in the parent div should be false in order to define widths in children
+-->
+<div>
+	<div id="columnName"
+		 data-title="Column Name"
+	     data-class-name="dt-left"
+	     data-visible="true"
+	     data-width="2em"
+	     >
+		<b>{{self}}</b>
+	</div>
+</div>
+
+
+<!--
+TWEAKING:
+	D) a) The html content of the children can reference other columns
+	   b) You can define columns that do not exist in the spreadsheet
+       b) Below illustrates how to make a column that combines (concats) two
+          columns A and B into Column C, which is not in the source
+-->
+<div>
+	<div id="columnA"
+	     data-title="Column A"
+	     >
+	</div>
+	<div id="columnB"
+		 data-title="Column B"
+		 >
+	</div>
+	<div id="columnC"
+		 data-title="Concat of Column A and B"
+		 >
+		 {{columnA}} and {{columnB}}
+	</div>
+</div>
+
+<!--
+TWEAKING:
+	E) a) The html content of the children can also do logic, 
+	      thanks to Handlebars http://handlebarsjs.com/
+	   b) Below illustrates a column that outputs the link if present
+	      with an A element, otherwise an italicized message
+-->
+<div>
+	<div id="link"
+		 data-title="Link"
+	     >
+		 {{#if self}}
+		   <a href="{{self}}">{{self}}</a>
+		 {{#else}}
+		   <i>No link available</i>
+		 {{/if}}
+	</div>
+</div>
+
+<!--
+TWEAKING:
+	F) a) You can also do complex comparison logic
+	   b) Below illustrates a column that outputs completely different html
+	      depending upon the value itself
+-->
+<div>
+	<div id="lastLogin">
+		 {{#compare self "===" "0"}}
+		   <i>This user has never logged in</i>
+		 {{/compare}}
+		 {{#compare self "!=" "0"}}
+			<b>{{self}}</b>
+		 {{/compare}}
+	</div>
+</div>
