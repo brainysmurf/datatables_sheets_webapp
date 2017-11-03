@@ -1,5 +1,28 @@
 <script>
 
+function camelize_(str) {
+  return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+    return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+  }).replace(/\s+/g, '');
+}
+
+function mapDiv($div, col, c) {
+  if ($div.length == 0) $div = $('<div/>');
+  var mapped = $div.data() || {};
+  mapped.title = $div.data('title') || $div.attr('id') || col;
+  mapped.data = $div.attr('id') || c;
+  if (!mapped.hasOwnProperty('title')) {
+    mapped.title = $div.attr('id');
+  }
+  if (!mapped.hasOwnProperty('visible')) {
+    mapped.visible = false;
+  }
+  if (mapped.fType) {
+    mapped.sortable = false;
+  }
+  return mapped;           
+}
+
 $(function () {
 	// Document DOM is ready:
 
@@ -12,41 +35,33 @@ $(function () {
               $template = $(template),
               columns;
 
-              function mapDiv($div, col) {
-                if ($div.length == 0) $div = $('<div/>');
-                var mapped = $div.data() || {};
-                mapped.title = $div.data('title') || $div.attr('id') || col;
-                mapped.data = $div.attr('id') || col;
-                if (!mapped.hasOwnProperty('title')) {
-                  mapped.title = $div.attr('id');
-                }
-                if (!mapped.hasOwnProperty('visible')) {
-                  mapped.visible = false;
-                }
-                if (mapped.fType) {
-                  mapped.sortable = false;
-                }
-                return mapped;           
-              }
-
               if (template) {
                 columns = rawData.columns.reduce(
                   function (acc, col) {
-                    var $div = $template.find('#'+col);
-                    acc.push(mapDiv($div, col));
+                    var c = camelize_(col);
+                    var $div = $template.find('#'+c);
+                    acc.push(mapDiv($div, col, c));
                     return acc;
                   }, []);
-                var selectHelper = '#' + rawData.columns.join(",#");
+                var selectHelper = '#' + rawData.columns.reduce(function (a, c) {
+                  a.push(camelize_(c));
+                  return a;
+                }, []).join(",#");
                 $template.find('div:not(' + selectHelper + ')').each(function (i, div) {
                   var $div = $(div);
-                  if ($div.attr('id')) columns.push(mapDiv($div, $div.prop('id')));
+                  if ($div.attr('id')) {
+                    columns.push(
+                      mapDiv( $div, $div.prop('title') || $div.prop('id'), $div.prop('id') )
+                    );
+                  }
                 });
               }
               else {
                 columns = rawData.columns.reduce(function (acc, col) {
-                  mapped.data = col;
+                  var c = camelize_(col);
+                  mapped.data = c;
                   acc.push({
-                    title: col, data:col,
+                    title: col, data: c,
                     stringFilter: false, categoryFilter: false
                   });
                   return acc;
@@ -61,7 +76,6 @@ $(function () {
           // Makes the datatable
           var settings = $.extend({}, $template.data());  // copy
           settings.columns = columns;
-          debugger;
 
           if (hasSideFilters) {
             // 

@@ -6,7 +6,6 @@
 
 'use strict';
 
-
 function returnData(ssId, rangeNotation) {
 
     var data = Sheets.Spreadsheets.Values.get(ssId, rangeNotation).values,

@@ -1,5 +1,5 @@
 node_modules
 src/*
-gapps.config.json
-package.json
+*.json
 dev/*.ejs
+*.sublime-workspace
