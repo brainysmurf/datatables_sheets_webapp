@@ -11,16 +11,14 @@
     Updates the document to have a horizontal rule and command text
 */
 
-function returnData() {
-    var ssId = '1d1jyKzTETsEjkyvUAzdLnFiDjGHI2y7y4cZPfVcXr3Y',
-        rangeNotation = 'just use DataRange';
+function returnData(ssId, rangeNotation) {
 
-    var data = SpreadsheetApp.openById(ssId).getSheetByName('member_list').getDataRange().getValues(),
+    var data = SpreadsheetApp.openById(ssId).getRange(rangeNotation).getValues(),
         template = HtmlService.createTemplateFromFile('Template').getRawContent();
 
     return {
         columns: data[0],
-        rows: data.slice(2),  // temp, fix later
+        rows: data.slice(1),  // temp, fix later
         template: template,
         selector: '#theDatatable'
     };

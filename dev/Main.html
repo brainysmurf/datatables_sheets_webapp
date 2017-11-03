@@ -1,36 +1,21 @@
 <!DOCTYPE html>
 
 <html>
-<head>
+  <head>
 
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/pepper-grinder/jquery-ui.css">
-  <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
 
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-  <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.js"></script>
+    <?!= include('css'); ?>
 
-  </script>
+    <?/*include('development');*/?>
+  </head>
 
-  <?!= include('css'); ?>
+  <body>
 
-  <?/*include('development');*/?>
-
-</head>
-
-<body>
-
-  <div id="tabs">
-    <ul>
-      <li><a href="#display">Display</a></li>
-    </ul>
-
-    <div id="display">
-      <table id="theDatatable"></table>
-    </div>
-
-  </div>
-
-  <?!= include('javascript', virtual()); ?>
-</body>
+    <?!= include('table'); ?>
+    <?!= include('javascript', virtual()); ?>
+  </body>
+</html>

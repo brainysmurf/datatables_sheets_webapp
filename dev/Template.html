@@ -2,24 +2,26 @@
      data-scroll-collapse="true"
      data-paging="false"
      data-scroll-x="false"
-     data-auto-width="true"
+     data-auto-width="false"
      data-add-class="displayTable"
+     data-ordering="false"
+     data-dom="t"
      >
 
 	<div id="groupName"
 	 	 data-title="Description"
 	 	 data-f-type="select"
-	     data-visible="true"
 	     data-class-name="dt-left"
 	 	 >
 		<b>{{self}}</b>
 	</div>
 
 	<div id="parentsOf"
-		 data-title="Parents of"
+		 data-title="One or Two"
 		 data-f-type="select"
+		 data-f-label="Chooose..."
+		 data-f-placement="left"
 		 data-class-name="dt-center"
-	     data-visible="true"
 	     >
 		<i>{{self}}</i>		
 	</div>
@@ -28,6 +30,7 @@
 		 data-title="Group Email Address"
 	     data-visible="false"
 	     data-class-name="dt-left"
+	     data-visible="true"
 	     data-f-type="select"
 	     >
 		<b>{{self}}</b>
@@ -36,7 +39,6 @@
 	<div id="member"
 		 data-title="Parent Email"
 	     data-f-type="input"
-	     data-visible="true"
 	     data-class-name="dt-left"
 	     >
 		 <b>{{self}}</b>
@@ -48,7 +50,6 @@
 	</div>
 
 	<div id="raw"
-	     data-visible="true"
 	     data-f-type="select"
 	     >
 	</div>
@@ -58,6 +59,12 @@
 	     data-title="Forwards to"
 	     >
 		 <b>{{self}}</b>
+	</div>
+
+	<div id="display"
+		data-visible="true"
+		>
+		hey: {{member}}
 	</div>
 
 </div>

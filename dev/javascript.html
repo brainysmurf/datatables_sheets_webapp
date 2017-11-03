@@ -63,10 +63,15 @@ $(function () {
             }));
             $('#displayTable').wrap( $('<div/>', {
               id: 'displayContainer',
+            }).css({
+              display: 'table',
+              width: '100%'
             }));
             $('#displayContainer').prepend( $('<div/>', {
               id: 'displayFilters', 
-              class: 'displayCell',
+            }).css({
+              'min-width': '200px',
+              'display': 'table-cell'
             }));
           }
 
@@ -79,7 +84,14 @@ $(function () {
                 if ($div.data('f-type') == 'select') {
                   var header = $div.data('f-label') || $div.data('title') || title;
                   var $select = $('<select><option value="">' + header + '</option></select>')
-                      .appendTo( $(column.header()).empty() )
+                      .appendTo( 
+                        $div.data('f-placement') == 'left'
+                        ? 
+                        $('#displayFilters')
+                        :
+                        $(column.header()).empty() 
+                      )
+                      .css('width', '90%')
                       .on( 'change', function () {
                           var val = $(this).val();  // $.fn.dataTable.util.escapeRegex( $(this).val() );
                           var newValue  = val; // ? '^'+val+'$' : '';
@@ -152,7 +164,7 @@ $(function () {
           console.log(error);
       })
 
-	.returnData();  // interact with document with Google API calls
+	.returnData($('#theDatatable').data('source'));  // interact with document with Google API calls
 
 
 });
