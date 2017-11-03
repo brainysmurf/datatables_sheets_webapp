@@ -10,26 +10,40 @@ $(function () {
       .withSuccessHandler(function (rawData) {
           var template = $.parseHTML(rawData.template || ""),
               $template = $(template),
-              columns = template ? 
-                $template.find('div').toArray().reduce(function (acc, div) {
+              columns;
+
+              function mapDiv($div, col) {
+                if ($div.length == 0) $div = $('<div/>');
+                var mapped = $div.data() || {};
+                mapped.title = $div.data('title') || $div.attr('id') || col;
+                mapped.data = $div.attr('id') || col;
+                if (!mapped.hasOwnProperty('title')) {
+                  mapped.title = $div.attr('id');
+                }
+                if (!mapped.hasOwnProperty('visible')) {
+                  mapped.visible = false;
+                }
+                if (mapped.fType) {
+                  mapped.sortable = false;
+                }
+                return mapped;           
+              }
+
+              if (template) {
+                columns = rawData.columns.reduce(
+                  function (acc, col) {
+                    var $div = $template.find('#'+col);
+                    acc.push(mapDiv($div, col));
+                    return acc;
+                  }, []);
+                var selectHelper = '#' + rawData.columns.join(",#");
+                $template.find('div:not(' + selectHelper + ')').each(function (i, div) {
                   var $div = $(div);
-                  var mapped = $div.data();
-                  mapped.title = $div.data('title') || $div.attr('id');
-                  mapped.data = $div.attr('id');
-                  if (!mapped.hasOwnProperty('title')) {
-                    mapped.title = $div.attr('id');
-                  }
-                  if (!mapped.hasOwnProperty('visible')) {
-                    mapped.visible = false;
-                  }
-                  if (mapped.fType) {
-                    mapped.sortable = false;
-                  }
-                  acc.push(mapped);
-                  return acc;
-                }, [])
-              :
-                rawData.columns.reduce(function (acc, col) {
+                  if ($div.attr('id')) columns.push(mapDiv($div, $div.prop('id')));
+                });
+              }
+              else {
+                columns = rawData.columns.reduce(function (acc, col) {
                   mapped.data = col;
                   acc.push({
                     title: col, data:col,
@@ -37,6 +51,7 @@ $(function () {
                   });
                   return acc;
                 }, []);
+              }
 
           var hasSideFilters = $template.find('div').toArray().some(function (div) {
             var $div = $(div);
@@ -46,6 +61,7 @@ $(function () {
           // Makes the datatable
           var settings = $.extend({}, $template.data());  // copy
           settings.columns = columns;
+          debugger;
 
           if (hasSideFilters) {
             // 
@@ -149,9 +165,7 @@ $(function () {
           }, []);
 
           settings.data = rowsToBeAdded;
-          $DT = $(rawData.selector)
-            .addClass($template.data('add-class') || '')
-            .DataTable(settings);
+          $DT = $(rawData.selector).DataTable(settings);
        })
 
       .withFailureHandler(function (error) {

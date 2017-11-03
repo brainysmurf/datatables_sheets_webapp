@@ -14,7 +14,7 @@ function returnData(ssId, rangeNotation) {
 
     return {
         columns: data[0],
-        rows: data.slice(1),  // temp, fix later
+        rows: data.slice(1),
         template: template,
         selector: '#theDatatable'
     };

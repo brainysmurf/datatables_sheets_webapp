@@ -25,7 +25,7 @@ $(function () {
         .click(function () {
             location.href = 'Main';
         })
-        .prependTo($('#tabs'));
+        .prependTo($('body'));
 });
 
 (function (window) {
@@ -64,7 +64,11 @@ $(function () {
                     columns: columns,
                     rows: rows,
                     selector: '#theDatatable',
-                    template: queryObj['template'] ? decodeURIComponent(queryObj['template']) : '<div></div>',
+                    template: queryObj['template'] 
+                              ?
+                              decodeURIComponent(queryObj['template'])
+                              :
+                              decodeURIComponent('<div></div>'),
                 };
             },
         },
