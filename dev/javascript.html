@@ -1,13 +1,20 @@
 <script>
 
+/*
+  Converts column names into js-compatible property names
+  i.e. "Title of Column" -> "titleOfColumn"
+*/
 function camelize_(str) {
   return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
     return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
   }).replace(/\s+/g, '');
 }
 
+/*
+  Convert a user-supplied div with data properties into a dt-compatible object,
+  supplying defaults
+*/
 function mapDiv($div, col, c) {
-  if ($div.length == 0) $div = $('<div/>');
   var mapped = $div.data() || {};
   mapped.title = $div.data('title') || $div.attr('id') || col;
   mapped.data = $div.attr('id') || c;
@@ -23,31 +30,52 @@ function mapDiv($div, col, c) {
   return mapped;           
 }
 
-$(function () {
-	// Document DOM is ready:
 
+/*
+  Executes when DOM is ready
+*/
+$(function () {
   var $dt = $('#theDatatable');
 
 	google.script.run
 
       .withSuccessHandler(function (rawData) {
+          // Read in info called from interface.gs
+          // Convert columns into property names, and retain titles
           var template = $.parseHTML(rawData.template || ""),
               $template = $(template),
-              columns;
+              columns = rawData.columns.reduce(
+                  function (acc, col) {
+                    acc.push({prop: camelize_(col), name:col});
+                    return acc;
+                  }, []
+              );
 
               if (template) {
-                columns = rawData.columns.reduce(
-                  function (acc, col) {
-                    var c = camelize_(col);
+                // Template provided, process:
+
+                // Go through each column from the raw data
+                columns = columns.reduce(
+                  function (acc, column) {
+                    var c = column.prop;
+                    var col = column.name;
+                    // grab the html that has the same id 
                     var $div = $template.find('#'+c);
+                    // process the div
                     acc.push(mapDiv($div, col, c));
                     return acc;
-                  }, []);
-                var selectHelper = '#' + rawData.columns.reduce(function (a, c) {
-                  a.push(camelize_(c));
-                  return a;
-                }, []).join(",#");
+                  }, []
+                );
+                // Grab any user-defined columns in the template,
+                // that does NOT match any column ID
+                var selectHelper = '#' + columns.reduce(
+                  function (a, column) {
+                    a.push(column.data);
+                    return a;
+                  }, []
+                ).join(",#");
                 $template.find('div:not(' + selectHelper + ')').each(function (i, div) {
+                  // Add to the columns accordingly
                   var $div = $(div);
                   if ($div.attr('id')) {
                     columns.push(
@@ -55,32 +83,24 @@ $(function () {
                     );
                   }
                 });
-              }
-              else {
-                columns = rawData.columns.reduce(function (acc, col) {
-                  var c = camelize_(col);
-                  mapped.data = c;
-                  acc.push({
-                    title: col, data: c,
-                    stringFilter: false, categoryFilter: false
-                  });
+              } else {
+                // No template provided, just do basic processing:
+                columns = columns.reduce(function (acc, column) {
+                  var c = column.prop;
+                  var col = column.name;
+                  acc.push(mapDiv($('<div/>', col, c)));
                   return acc;
                 }, []);
               }
 
+          // detect whether any of the columns have "left" placement filters
+          // and add extra html accordingly
           var hasSideFilters = $template.find('div').toArray().some(function (div) {
             var $div = $(div);
             return ($div.data('f-placement') == 'left' && $div.attr('id'))|| false;
           });
-
-          // Makes the datatable
-          var settings = $.extend({}, $template.data());  // copy
-          settings.columns = columns;
-
           if (hasSideFilters) {
-            // 
             // Add extra html to account for the sidebar required for filters on the side
-            //
             $('#theDatatable').wrap( $('<div/>', {
               id: 'displayTable', 
               class: 'displayCell'
@@ -99,7 +119,19 @@ $(function () {
             }));
           }
 
+          // Make a settings object according to the data properties on the
+          // parent div in the template
+          var settings = $.extend({}, $template.data());
+          settings.columns = columns;
+
+          // The settings object uses the DT api and its initComplete
+          // in order to adjust the html to make the filter features.
+          // We need to define it inline here instead of at the top of the file
+          // to take advantage of javascript's closure, because we need $template variable
           settings.initComplete = function () {
+
+            // Go through each column defined in the datatable, match that with user-defined
+            // div in the template, and process accordingly
             this.api().columns().every( function () {
                 var column = this,
                     title = column.dataSrc(),
@@ -117,8 +149,8 @@ $(function () {
                       )
                       .css('width', '90%')
                       .on( 'change', function () {
-                          var val = $(this).val();  // $.fn.dataTable.util.escapeRegex( $(this).val() );
-                          var newValue  = val; // ? '^'+val+'$' : '';
+                          var val = $.fn.dataTable.util.escapeRegex( $(this).val() );
+                          var newValue  = val ? '^'+val+'$' : '';
                           column
                               .search( newValue, true, false, true )
                               .draw();
@@ -155,30 +187,42 @@ $(function () {
 
                 }
             } );
-          };
+          };  // end initComplete
 
+          // create a cache of the templated html
           var templateCache = columns.reduce(function (acc, col) {
             acc[col.data] = $.trim($template.find('#'+ col.data).html()) || "{{self}}";
             return acc;
           }, {});
 
+          // process the rows returned from interface.gs
           var rowsToBeAdded = rawData.rows.reduce(function (acc, row) {
+              // make an object that holds the raw values in row keyed by column
+              // this will be used in Handlebars below
               var valueObj = columns.reduce(function (a, col, index) {
                 a[col.data] = row[index];
                 return a;
               }, {});
-              var result = columns.reduce(function (a, col) {
-                var before = templateCache[col.data];
-                var combined = Object.assign(valueObj, {self: valueObj[col.data]});
-                var after = Handlebars.compile(before)( combined );
-                a[col.data] = after;
-                return a;
-              }, {});
+
+              // make an object that represents the row, keyed by column.data
+              // whose values have been processed by Handlebars
+              var result = columns.reduce(
+                function (a, col) {
+                  var before = templateCache[col.data];
+                  var combined = Object.assign(valueObj, {self: valueObj[col.data]});
+                  var after = Handlebars.compile(before)( combined );
+                  a[col.data] = after;
+                  return a;
+                }, {}
+              );
               acc.push(result);
               return acc;
           }, []);
 
+          // Store in settings
           settings.data = rowsToBeAdded;
+
+          // Trigger the datatables API
           $DT = $(rawData.selector).DataTable(settings);
        })
 
@@ -186,7 +230,7 @@ $(function () {
           console.log(error);
       })
 
-	.returnData($dt.data('source'), $dt.data('range'));  // interact with document with Google API calls
+	.returnData($dt.data('source'), $dt.data('range'));
 
 
 });
